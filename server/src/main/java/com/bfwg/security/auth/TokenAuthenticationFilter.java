@@ -1,5 +1,15 @@
 package com.bfwg.security.auth;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.bfwg.security.TokenHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,20 +24,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Created by fan.jin on 2016-10-19.
- */
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
@@ -61,8 +58,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     );
 
     @Override
-    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+    public void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain) throws IOException, ServletException {
 
         String authToken = tokenHelper.getToken(request);
         if (authToken != null && !skipPathRequest(request, pathsToSkip)) {
@@ -72,7 +71,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 // get user
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 // create authentication
-                TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
+                TokenBasedAuthentication authentication =
+                        new TokenBasedAuthentication(userDetails);
                 authentication.setToken(authToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
@@ -87,9 +87,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean skipPathRequest(HttpServletRequest request, List<String> pathsToSkip) {
         Assert.notNull(pathsToSkip, "path cannot be null.");
-        List<RequestMatcher> m = pathsToSkip.stream().map(path -> new AntPathRequestMatcher(path)).collect(Collectors.toList());
+        List<RequestMatcher> m = pathsToSkip.stream()
+                .map(AntPathRequestMatcher::new)
+                .collect(Collectors.toList());
         OrRequestMatcher matchers = new OrRequestMatcher(m);
         return matchers.matches(request);
     }
-
 }

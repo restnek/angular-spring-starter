@@ -1,5 +1,7 @@
 package com.bfwg.service.impl;
 
+import java.util.List;
+
 import com.bfwg.model.Authority;
 import com.bfwg.model.User;
 import com.bfwg.model.UserRequest;
@@ -14,15 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-/**
- * Created by fan.jin on 2016-10-15.
- */
-
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
 
     private final AuthorityService authService;
@@ -72,5 +67,4 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder getBCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

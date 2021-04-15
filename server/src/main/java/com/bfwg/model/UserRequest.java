@@ -1,8 +1,6 @@
 package com.bfwg.model;
 
-
 public class UserRequest {
-
     private Long id;
 
     private String username;
@@ -52,5 +50,4 @@ public class UserRequest {
     public void setId(Long id) {
         this.id = id;
     }
-
 }

@@ -1,5 +1,11 @@
 package com.bfwg.security;
 
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,19 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Map;
-
-
-/**
- * Created by fan.jin on 2016-10-19.
- */
-
 @Component
 public class TokenHelper {
-
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
     @Autowired
     @Qualifier("customUserDetailsService")
@@ -113,22 +108,18 @@ public class TokenHelper {
     }
 
     private Date generateExpirationDate() {
-
-        return new Date(getCurrentTimeMillis() + this.EXPIRES_IN * 1000);
+        return new Date(getCurrentTimeMillis() + this.EXPIRES_IN * 1000L);
     }
 
     public String getToken(HttpServletRequest request) {
-        /**
-         *  Getting the token from Cookie store
-         */
+        // Getting the token from Cookie store
         Cookie authCookie = getCookieValueByName(request, AUTH_COOKIE);
         if (authCookie != null) {
             return authCookie.getValue();
         }
-        /**
-         *  Getting the token from Authentication header
-         *  e.g Bearer your_token
-         */
+
+        // Getting the token from Authentication header
+        // e.g Bearer your_token
         String authHeader = request.getHeader(AUTH_HEADER);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
@@ -148,11 +139,13 @@ public class TokenHelper {
         if (request.getCookies() == null) {
             return null;
         }
+
         for (int i = 0; i < request.getCookies().length; i++) {
             if (request.getCookies()[i].getName().equals(name)) {
                 return request.getCookies()[i];
             }
         }
+
         return null;
     }
 }

@@ -7,12 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionHandlingController {
-
-  @ExceptionHandler(ResourceConflictException.class)
-  public ResponseEntity<ExceptionResponse> resourceConflict(ResourceConflictException ex) {
-    ExceptionResponse response = new ExceptionResponse();
-    response.setErrorCode("Conflict");
-    response.setErrorMessage(ex.getMessage());
-    return new ResponseEntity<ExceptionResponse>(response, HttpStatus.CONFLICT);
-  }
+    @ExceptionHandler(ResourceConflictException.class)
+    public ResponseEntity<ExceptionResponse> resourceConflict(ResourceConflictException e) {
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.CONFLICT, e.getMessage());
+        return new ResponseEntity<>(response, response.getStatus());
+    }
 }

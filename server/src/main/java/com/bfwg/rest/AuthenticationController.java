@@ -1,5 +1,12 @@
 package com.bfwg.rest;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.bfwg.config.WebSecurityConfig;
 import com.bfwg.model.UserTokenState;
 import com.bfwg.security.TokenHelper;
@@ -13,20 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Created by fan.jin on 2017-05-10.
- */
-
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
-
     private final TokenHelper tokenHelper;
     private final WebSecurityConfig userDetailsService;
 
@@ -37,13 +33,18 @@ public class AuthenticationController {
     private String TOKEN_COOKIE;
 
     @Autowired
-    public AuthenticationController(TokenHelper tokenHelper, WebSecurityConfig userDetailsService) {
+    public AuthenticationController(
+            TokenHelper tokenHelper,
+            WebSecurityConfig userDetailsService) {
+
         this.tokenHelper = tokenHelper;
         this.userDetailsService = userDetailsService;
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> refreshAuthenticationToken(
+            HttpServletRequest request,
+            HttpServletResponse response) {
 
         String authToken = tokenHelper.getToken(request);
         if (authToken != null && tokenHelper.canTokenBeRefreshed(authToken)) {
@@ -67,8 +68,12 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) throws Exception {
-        userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
+    public ResponseEntity<?> changePassword(
+            @RequestBody PasswordChanger passwordChanger) throws Exception {
+
+        userDetailsService.changePassword(
+                passwordChanger.oldPassword,
+                passwordChanger.newPassword);
         Map<String, String> result = new HashMap<>();
         result.put("result", "success");
         return ResponseEntity.accepted().body(result);
@@ -78,5 +83,4 @@ public class AuthenticationController {
         public String oldPassword;
         public String newPassword;
     }
-
 }

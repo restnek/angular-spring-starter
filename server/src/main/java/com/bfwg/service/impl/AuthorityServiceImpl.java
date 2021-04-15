@@ -1,5 +1,8 @@
 package com.bfwg.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bfwg.model.Authority;
 import com.bfwg.model.UserRoleName;
 import com.bfwg.repository.AuthorityRepository;
@@ -7,12 +10,8 @@ import com.bfwg.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class AuthorityServiceImpl implements AuthorityService {
-
     private final AuthorityRepository authorityRepository;
 
     @Autowired
@@ -38,5 +37,4 @@ public class AuthorityServiceImpl implements AuthorityService {
         auths.add(auth);
         return auths;
     }
-
 }

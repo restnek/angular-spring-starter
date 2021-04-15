@@ -1,5 +1,9 @@
 package com.bfwg.rest;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.bfwg.exception.ResourceConflictException;
 import com.bfwg.model.User;
 import com.bfwg.model.UserRequest;
@@ -17,21 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-/**
- * Created by fan.jin on 2016-10-15.
- */
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
-
     private final UserService userService;
 
     @Autowired
@@ -50,17 +45,17 @@ public class UserController {
     }
 
     @RequestMapping(method = GET, value = "/user/reset-credentials")
-    public ResponseEntity<Map> resetCredentials() {
+    public ResponseEntity<Map<String, String>> resetCredentials() {
         this.userService.resetCredentials();
         Map<String, String> result = new HashMap<>();
         result.put("result", "success");
         return ResponseEntity.accepted().body(result);
     }
 
-
     @RequestMapping(method = POST, value = "/signup")
-    public ResponseEntity<?> addUser(@RequestBody UserRequest userRequest,
-                                     UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> addUser(
+            @RequestBody UserRequest userRequest,
+            UriComponentsBuilder ucBuilder) {
 
         User existUser = this.userService.findByUsername(userRequest.getUsername());
         if (existUser != null) {
@@ -68,8 +63,10 @@ public class UserController {
         }
         User user = this.userService.save(userRequest);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri());
-        return new ResponseEntity<User>(user, HttpStatus.CREATED);
+        headers.setLocation(ucBuilder
+                .path("/api/user/{userId}")
+                .buildAndExpand(user.getId()).toUri());
+        return new ResponseEntity<>(user, headers, HttpStatus.CREATED);
     }
 
     /*
@@ -81,5 +78,4 @@ public class UserController {
     public User user() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
-
 }
