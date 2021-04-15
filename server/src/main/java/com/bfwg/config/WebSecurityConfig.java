@@ -7,8 +7,8 @@ import com.bfwg.security.auth.LogoutSuccess;
 import com.bfwg.security.auth.RestAuthenticationEntryPoint;
 import com.bfwg.security.auth.TokenAuthenticationFilter;
 import com.bfwg.service.impl.CustomUserDetailsService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,11 +28,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+@Slf4j
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    protected final Log LOGGER = LogFactory.getLog(getClass());
-
     private final CustomUserDetailsService jwtUserDetailsService;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final LogoutSuccess logoutSuccess;
@@ -41,21 +41,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${jwt.cookie}")
     private String TOKEN_COOKIE;
-
-    @Autowired
-    public WebSecurityConfig(
-            CustomUserDetailsService jwtUserDetailsService,
-            RestAuthenticationEntryPoint restAuthenticationEntryPoint,
-            LogoutSuccess logoutSuccess,
-            AuthenticationSuccessHandler authenticationSuccessHandler,
-            AuthenticationFailureHandler authenticationFailureHandler) {
-
-        this.jwtUserDetailsService = jwtUserDetailsService;
-        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
-        this.logoutSuccess = logoutSuccess;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.authenticationFailureHandler = authenticationFailureHandler;
-    }
 
     @Bean
     public TokenAuthenticationFilter jwtAuthenticationTokenFilter() {
@@ -120,16 +105,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         String username = currentUser.getName();
 
         if (authenticationManagerBean() != null) {
-            LOGGER.debug("Re-authenticating user '" + username
+            log.debug("Re-authenticating user '" + username
                     + "' for password change request.");
             authenticationManagerBean().authenticate(
                     new UsernamePasswordAuthenticationToken(username, oldPassword));
         } else {
-            LOGGER.debug("No authentication manager set. can't change Password!");
+            log.debug("No authentication manager set. can't change Password!");
             return;
         }
 
-        LOGGER.debug("Changing password for user '" + username + "'");
+        log.debug("Changing password for user '" + username + "'");
 
         User user = jwtUserDetailsService.loadUserByUsername(username);
         user.setPassword(passwordEncoder().encode(newPassword));

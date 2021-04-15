@@ -9,7 +9,7 @@ import com.bfwg.model.UserRoleName;
 import com.bfwg.repository.UserRepository;
 import com.bfwg.service.AuthorityService;
 import com.bfwg.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,16 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final AuthorityService authService;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, AuthorityService authService) {
-        this.userRepository = userRepository;
-        this.authService = authService;
-    }
 
     public void resetCredentials() {
         List<User> users = userRepository.findAll();

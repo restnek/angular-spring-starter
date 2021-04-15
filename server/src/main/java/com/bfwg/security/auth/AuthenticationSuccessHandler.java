@@ -10,26 +10,23 @@ import com.bfwg.model.User;
 import com.bfwg.model.UserTokenState;
 import com.bfwg.security.TokenHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final TokenHelper tokenHelper;
     private final ObjectMapper objectMapper;
+
     @Value("${jwt.expires_in}")
     private int EXPIRES_IN;
+
     @Value("${jwt.cookie}")
     private String TOKEN_COOKIE;
-
-    @Autowired
-    public AuthenticationSuccessHandler(TokenHelper tokenHelper, ObjectMapper objectMapper) {
-        this.tokenHelper = tokenHelper;
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     public void onAuthenticationSuccess(

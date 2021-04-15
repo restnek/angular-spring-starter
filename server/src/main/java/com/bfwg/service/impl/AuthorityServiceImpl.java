@@ -7,17 +7,13 @@ import com.bfwg.model.Authority;
 import com.bfwg.model.UserRoleName;
 import com.bfwg.repository.AuthorityRepository;
 import com.bfwg.service.AuthorityService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorityServiceImpl implements AuthorityService {
     private final AuthorityRepository authorityRepository;
-
-    @Autowired
-    public AuthorityServiceImpl(AuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
-    }
 
     @Override
     public List<Authority> findById(Long id) {

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.bfwg.config.WebSecurityConfig;
 import com.bfwg.model.UserTokenState;
 import com.bfwg.security.TokenHelper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AuthenticationController {
     private final TokenHelper tokenHelper;
     private final WebSecurityConfig userDetailsService;
@@ -31,15 +32,6 @@ public class AuthenticationController {
 
     @Value("${jwt.cookie}")
     private String TOKEN_COOKIE;
-
-    @Autowired
-    public AuthenticationController(
-            TokenHelper tokenHelper,
-            WebSecurityConfig userDetailsService) {
-
-        this.tokenHelper = tokenHelper;
-        this.userDetailsService = userDetailsService;
-    }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAuthenticationToken(
