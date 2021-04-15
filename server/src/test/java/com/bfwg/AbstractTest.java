@@ -1,5 +1,8 @@
 package com.bfwg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bfwg.model.Authority;
 import com.bfwg.model.User;
 import com.bfwg.model.UserRoleName;
@@ -7,26 +10,16 @@ import com.bfwg.repository.UserRepository;
 import com.bfwg.security.auth.AnonAuthentication;
 import com.bfwg.security.auth.TokenBasedAuthentication;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by fan.jin on 2016-11-07.
- */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {Application.class})
+@SpringBootTest(classes = Application.class)
 public abstract class AbstractTest {
-
     @Autowired
     protected UserRepository userRepository;
 
@@ -34,14 +27,14 @@ public abstract class AbstractTest {
     protected ObjectMapper objectMapper;
     protected SecurityContext securityContext;
 
-    @Before
+    @BeforeEach
     public final void beforeAbstractTest() {
         securityContext = Mockito.mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(securityContext.getAuthentication()).thenReturn(new AnonAuthentication());
     }
 
-    @After
+    @AfterEach
     public final void afterAbstractTest() {
         SecurityContextHolder.clearContext();
     }
@@ -62,7 +55,6 @@ public abstract class AbstractTest {
     }
 
     protected User buildTestUser() {
-
         User user = new User();
         Authority userAuthority = new Authority();
         userAuthority.setName(UserRoleName.ROLE_USER);
@@ -72,7 +64,6 @@ public abstract class AbstractTest {
         user.setAuthorities(userAuthorities);
         return user;
     }
-
 
     protected User buildTestAdmin() {
         Authority userAuthority = new Authority();
@@ -87,6 +78,4 @@ public abstract class AbstractTest {
         admin.setAuthorities(adminAuthorities);
         return admin;
     }
-
-
 }
