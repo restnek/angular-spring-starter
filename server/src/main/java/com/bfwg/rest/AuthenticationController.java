@@ -15,9 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,7 +34,7 @@ public class AuthenticationController {
     @Value("${jwt.cookie}")
     private String TOKEN_COOKIE;
 
-    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
+    @GetMapping("/refresh")
     public ResponseEntity<?> refreshAuthenticationToken(
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -58,7 +59,7 @@ public class AuthenticationController {
         }
     }
 
-    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    @PostMapping("/changePassword")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> changePassword(
             @RequestBody PasswordChanger passwordChanger) throws Exception {
