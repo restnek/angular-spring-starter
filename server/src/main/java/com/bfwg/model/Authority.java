@@ -1,6 +1,5 @@
 package com.bfwg.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,16 +16,14 @@ import org.springframework.security.core.GrantedAuthority;
 @Getter
 @Setter
 @Entity
-@Table(name = "AUTHORITY")
+@Table(name = "authority")
 public class Authority implements GrantedAuthority {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "name")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserRoleName name;
 
