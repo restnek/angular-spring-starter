@@ -1,18 +1,21 @@
 package com.bfwg.rest;
 
-import java.util.Map;
+import java.net.URI;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.bfwg.config.JwtProperties;
+import com.bfwg.model.persistence.User;
 import com.bfwg.model.request.PasswordChanger;
+import com.bfwg.model.request.SignUpRequest;
 import com.bfwg.model.response.UserTokenState;
 import com.bfwg.security.TokenHelper;
 import com.bfwg.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -20,46 +23,39 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 @RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final UserService userService;
     private final TokenHelper tokenHelper;
     private final JwtProperties jwtProperties;
 
-    @GetMapping("/refresh")
-    public ResponseEntity<?> refreshAuthenticationToken(
-            HttpServletRequest request,
-            HttpServletResponse response) {
+    @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<User> addUser(@RequestBody SignUpRequest signUpRequest) {
+        User savedUser = userService.save(signUpRequest);
 
-        String authToken = tokenHelper.getToken(request);
-        if (authToken != null && tokenHelper.canTokenBeRefreshed(authToken)) {
-            // TODO check user password last update
-            String refreshedToken = tokenHelper.refreshToken(authToken);
+        URI location = MvcUriComponentsBuilder
+                .fromMethodCall(MvcUriComponentsBuilder
+                        .on(UserController.class)
+                        .getUserById(savedUser.getId()))
+                .build()
+                .toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(location);
 
-            Cookie authCookie = new Cookie(jwtProperties.getCookie(), (refreshedToken));
-            authCookie.setPath("/");
-            authCookie.setHttpOnly(true);
-            authCookie.setMaxAge(jwtProperties.getExpiration());
-            // Add cookie to response
-            response.addCookie(authCookie);
-
-            UserTokenState userTokenState = new UserTokenState(
-                    refreshedToken,
-                    jwtProperties.getExpiration());
-            return ResponseEntity.ok(userTokenState);
-        } else {
-            UserTokenState userTokenState = new UserTokenState();
-            return ResponseEntity.accepted().body(userTokenState);
-        }
+        return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping("/change-password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> changePassword(
+    public void changePassword(
             @RequestBody PasswordChanger passwordChanger,
             Authentication authentication) {
 
@@ -67,7 +63,36 @@ public class AuthenticationController {
                 authentication.getName(),
                 passwordChanger.getOldPassword(),
                 passwordChanger.getNewPassword());
-        Map<String, String> body = Map.of("result", "success");
-        return ResponseEntity.accepted().body(body);
+    }
+
+    @GetMapping("/whoami")
+    @PreAuthorize("hasRole('USER')")
+    public User findOutWhoAmI(Authentication authentication) {
+        return (User) authentication.getPrincipal();
+    }
+
+    // TODO check user password last update
+    @GetMapping("/refresh")
+    public ResponseEntity<UserTokenState> refreshAuthToken(HttpServletRequest request) {
+        String authToken = tokenHelper.getToken(request);
+        if (authToken != null && tokenHelper.canTokenBeRefreshed(authToken)) {
+            String refreshedToken = tokenHelper.refreshToken(authToken);
+
+            ResponseCookie authCookie = ResponseCookie.from(jwtProperties.getCookie(), refreshedToken)
+                    .httpOnly(true)
+                    .maxAge(jwtProperties.getExpiration())
+                    .build();
+
+            UserTokenState userTokenState = new UserTokenState(
+                    refreshedToken,
+                    jwtProperties.getExpiration());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, authCookie.toString())
+                    .body(userTokenState);
+        } else {
+            UserTokenState userTokenState = new UserTokenState();
+            return ResponseEntity.accepted().body(userTokenState);
+        }
     }
 }

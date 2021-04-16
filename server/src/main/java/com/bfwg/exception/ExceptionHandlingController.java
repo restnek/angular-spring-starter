@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionHandlingController {
-    @ExceptionHandler(ResourceConflictException.class)
-    public ResponseEntity<ExceptionResponse> resourceConflict(ResourceConflictException e) {
+    @ExceptionHandler(ResourceAlreadyExistException.class)
+    public ResponseEntity<ExceptionResponse> handle(ResourceAlreadyExistException e) {
         ExceptionResponse response = new ExceptionResponse(HttpStatus.CONFLICT, e.getMessage());
         return new ResponseEntity<>(response, response.getStatus());
     }

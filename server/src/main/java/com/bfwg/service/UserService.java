@@ -3,18 +3,15 @@ package com.bfwg.service;
 import java.util.List;
 
 import com.bfwg.model.persistence.User;
-import com.bfwg.model.request.UserRequest;
+import com.bfwg.model.request.SignUpRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
-    void resetCredentials();
-
     User findById(Long id);
 
-    User findByUsername(String username);
+    List<User> findAll(Pageable pageable);
 
-    List<User> findAll();
-
-    User save(UserRequest user);
+    User save(SignUpRequest user);
 
     void changePassword(String username, String oldPassword, String newPassword);
 }
