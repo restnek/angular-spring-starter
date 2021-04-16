@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    // TODO: check oldPassword equals
     @Override
     @Transactional
     public void changePassword(String username, String oldPassword, String newPassword) {

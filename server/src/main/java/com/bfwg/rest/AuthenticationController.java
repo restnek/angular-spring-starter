@@ -3,6 +3,7 @@ package com.bfwg.rest;
 import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import com.bfwg.config.JwtProperties;
 import com.bfwg.model.persistence.User;
@@ -37,7 +38,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> addUser(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         User savedUser = userService.save(signUpRequest);
 
         URI location = MvcUriComponentsBuilder
@@ -56,7 +57,7 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('USER')")
     public void changePassword(
-            @RequestBody PasswordChanger passwordChanger,
+            @Valid @RequestBody PasswordChanger passwordChanger,
             Authentication authentication) {
 
         userService.changePassword(
