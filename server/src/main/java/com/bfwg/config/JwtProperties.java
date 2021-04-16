@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "security.jwt")
 public class JwtProperties {
     private String issuer;
-    private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
-    private String header = "Authorization";
     private int expiration = 600;
     private String secret = UUID.randomUUID().toString();
+    private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+    private String header = "Authorization";
     private String cookie = "AUTH-TOKEN";
 
     public int getExpirationInMilliseconds() {

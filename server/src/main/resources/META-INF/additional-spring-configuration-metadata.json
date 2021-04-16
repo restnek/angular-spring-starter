@@ -1,0 +1,38 @@
+{
+  "properties": [
+    {
+      "name": "security.jwt.issuer",
+      "type": "java.lang.String",
+      "description": "The 'iss' (issuer) claim identifies the principal that issued the JWT."
+    },
+    {
+      "name": "security.jwt.expiration",
+      "type": "java.lang.String",
+      "description": "JWT expiration in seconds.",
+      "defaultValue": 600
+    },
+    {
+      "name": "security.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Signing key to use to digitally sign the JWT. By default, a random UUID is generated."
+    },
+    {
+      "name": "security.jwt.signature-algorithm",
+      "type": "io.jsonwebtoken.SignatureAlgorithm",
+      "description": "JWT signature algorithm.",
+      "defaultValue": "HS512"
+    },
+    {
+      "name": "security.jwt.header",
+      "type": "java.lang.String",
+      "description": "Name of the header that contains the JWT.",
+      "defaultValue": "Authorization"
+    },
+    {
+      "name": "security.jwt.cookie",
+      "type": "java.lang.String",
+      "description": "Name of the cookie that contains the JWT.",
+      "defaultValue": "AUTH-TOKEN"
+    }
+  ]
+}
