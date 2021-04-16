@@ -1,5 +1,6 @@
 package com.bfwg.security;
 
+import java.time.Clock;
 import java.util.Date;
 
 import javax.servlet.http.Cookie;
@@ -8,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.bfwg.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,14 +18,24 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TokenHelper {
     private final UserDetailsService userDetailsService;
     private final JwtProperties jwtProperties;
+    private Clock clock;
+
+    @Autowired
+    public TokenHelper(UserDetailsService userDetailsService, JwtProperties jwtProperties) {
+        this(userDetailsService, jwtProperties, Clock.systemDefaultZone());
+    }
+
+    public void setClock(Clock clock) {
+        this.clock = clock;
+    }
 
     public String generateToken(String username) {
-        Date issuedAt = generateCurrentDate();
-        Date expiration = generateExpirationDate(issuedAt);
+        Date issuedAt = getCurrentDate();
+        Date expiration = getExpirationDate(issuedAt);
         Claims claims = Jwts.claims()
                 .setSubject(username)
                 .setIssuedAt(issuedAt)
@@ -38,8 +50,8 @@ public class TokenHelper {
             return null;
         }
 
-        Date issuedAt = generateCurrentDate();
-        Date expiration = generateExpirationDate(issuedAt);
+        Date issuedAt = getCurrentDate();
+        Date expiration = getExpirationDate(issuedAt);
         claims.setIssuedAt(issuedAt).setExpiration(expiration);
         return generateToken(claims);
     }
@@ -62,17 +74,17 @@ public class TokenHelper {
             String username = getUsernameFromToken(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            return expirationDate.compareTo(generateCurrentDate()) > 0;
+            return expirationDate.compareTo(getCurrentDate()) > 0;
         } catch (Exception e) {
             return false;
         }
     }
 
-    private Date generateCurrentDate() {
-        return new Date();
+    private Date getCurrentDate() {
+        return Date.from(clock.instant());
     }
 
-    private Date generateExpirationDate(Date issuedAt) {
+    private Date getExpirationDate(Date issuedAt) {
         return new Date(issuedAt.getTime() + this.jwtProperties.getExpirationInMilliseconds());
     }
 
