@@ -1,11 +1,10 @@
 package com.bfwg.config;
 
 import com.bfwg.security.TokenHelper;
-import com.bfwg.security.auth.AuthenticationFailureHandler;
-import com.bfwg.security.auth.AuthenticationSuccessHandler;
-import com.bfwg.security.auth.LogoutSuccess;
-import com.bfwg.security.auth.RestAuthenticationEntryPoint;
 import com.bfwg.security.auth.TokenAuthenticationFilter;
+import com.bfwg.security.handler.AuthenticationSuccessHandler;
+import com.bfwg.security.handler.RestAuthenticationEntryPoint;
+import com.bfwg.security.handler.RestAuthenticationFailureHandler;
 import com.bfwg.service.impl.UserDetailsLoaderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -47,16 +46,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         AuthenticationSuccessHandler authenticationSuccessHandler =
                 new AuthenticationSuccessHandler(tokenHelper, objectMapper, jwtProperties);
-        AuthenticationFailureHandler authenticationFailureHandler =
-                new AuthenticationFailureHandler();
-        LogoutSuccess logoutSuccess = new LogoutSuccess(objectMapper);
+        RestAuthenticationFailureHandler authenticationFailureHandler =
+                new RestAuthenticationFailureHandler(objectMapper);
         RestAuthenticationEntryPoint restAuthenticationEntryPoint =
-                new RestAuthenticationEntryPoint();
+                new RestAuthenticationEntryPoint(objectMapper);
 
         // @formatter:off
         http
                 .csrf()
-                        .ignoringAntMatchers("/api/login", "/api/signup")
+                        .ignoringAntMatchers("/api/auth/login", "/api/auth/signup")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .sessionManagement()
@@ -70,13 +68,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticated()
                 .and()
                 .formLogin()
-                        .loginPage("/api/login")
+                        .loginPage("/api/auth/login")
                         .successHandler(authenticationSuccessHandler)
                         .failureHandler(authenticationFailureHandler)
                 .and()
                 .logout()
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
-                        .logoutSuccessHandler(logoutSuccess)
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout"))
                         .deleteCookies(jwtProperties.getCookie())
                 .and()
                 .addFilterBefore(

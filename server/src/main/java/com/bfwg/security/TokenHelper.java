@@ -9,6 +9,7 @@ import com.bfwg.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -107,5 +108,13 @@ public class TokenHelper {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public ResponseCookie generateCookieWithToken(String token) {
+        return ResponseCookie.from(jwtProperties.getCookie(), token)
+                .httpOnly(true)
+                .maxAge(jwtProperties.getExpiration())
+                .path("/")
+                .build();
     }
 }

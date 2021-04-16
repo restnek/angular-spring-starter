@@ -77,12 +77,7 @@ public class AuthenticationController {
         String authToken = tokenHelper.getToken(request);
         if (authToken != null && tokenHelper.canTokenBeRefreshed(authToken)) {
             String refreshedToken = tokenHelper.refreshToken(authToken);
-
-            ResponseCookie authCookie = ResponseCookie.from(jwtProperties.getCookie(), refreshedToken)
-                    .httpOnly(true)
-                    .maxAge(jwtProperties.getExpiration())
-                    .build();
-
+            ResponseCookie authCookie = tokenHelper.generateCookieWithToken(refreshedToken);
             UserTokenState userTokenState = new UserTokenState(
                     refreshedToken,
                     jwtProperties.getExpiration());

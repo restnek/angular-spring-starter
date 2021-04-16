@@ -1,8 +1,7 @@
-package com.bfwg.security.auth;
+package com.bfwg.security.handler;
 
 import java.io.IOException;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +11,9 @@ import com.bfwg.model.response.UserTokenState;
 import com.bfwg.security.TokenHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
@@ -28,25 +30,14 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
             Authentication authentication) throws IOException {
 
         clearAuthenticationAttributes(request);
+
         User user = (User) authentication.getPrincipal();
+        String token = tokenHelper.generateToken(user.getUsername());
+        ResponseCookie cookie = tokenHelper.generateCookieWithToken(token);
+        UserTokenState userTokenState = new UserTokenState(token, jwtProperties.getExpiration());
 
-        String jws = tokenHelper.generateToken(user.getUsername());
-
-        // Create token auth Cookie
-        Cookie authCookie = new Cookie(jwtProperties.getCookie(), (jws));
-
-        authCookie.setHttpOnly(true);
-
-        authCookie.setMaxAge(jwtProperties.getExpiration());
-
-        authCookie.setPath("/");
-        // Add cookie to response
-        response.addCookie(authCookie);
-
-        // JWT is also in the response
-        UserTokenState userTokenState = new UserTokenState(jws, jwtProperties.getExpiration());
-        String jwtResponse = objectMapper.writeValueAsString(userTokenState);
-        response.setContentType("application/json");
-        response.getWriter().write(jwtResponse);
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(objectMapper.writeValueAsString(userTokenState));
     }
 }
