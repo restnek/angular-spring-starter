@@ -13,20 +13,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
     private final AuthorityService authService;
+    private final PasswordEncoder passwordEncoder;
 
     public void resetCredentials() {
         List<User> users = userRepository.findAll();
         for (User user : users) {
-            user.setPassword(getBCryptPasswordEncoder().encode("123"));
+            user.setPassword(passwordEncoder.encode("123"));
             userRepository.save(user);
         }
     }
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public User save(UserRequest userRequest) {
         User user = new User();
         user.setUsername(userRequest.getUsername());
-        user.setPassword(getBCryptPasswordEncoder().encode(userRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         user.setFirstname(userRequest.getFirstname());
         user.setLastname(userRequest.getLastname());
         List<Authority> auth = authService.findByName(UserRoleName.ROLE_USER);
@@ -59,7 +59,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    private BCryptPasswordEncoder getBCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Override
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        userRepository
+                .findByUsername(username)
+                .map(u -> {
+                    u.setPassword(passwordEncoder.encode(newPassword));
+                    return userRepository.save(u);
+                });
     }
 }

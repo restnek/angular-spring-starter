@@ -15,4 +15,6 @@ public interface UserService {
     List<User> findAll();
 
     User save(UserRequest user);
+
+    void changePassword(String username, String oldPassword, String newPassword);
 }

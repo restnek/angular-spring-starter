@@ -11,9 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.stereotype.Component;
 
-@Component
 @RequiredArgsConstructor
 public class LogoutSuccess implements LogoutSuccessHandler {
     private final ObjectMapper objectMapper;
@@ -27,7 +25,7 @@ public class LogoutSuccess implements LogoutSuccessHandler {
         Map<String, String> result = new HashMap<>();
         result.put("result", "success");
         response.setContentType("application/json");
-        response.getWriter().write(objectMapper.writeValueAsString(result));
         response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(objectMapper.writeValueAsString(result));
     }
 }

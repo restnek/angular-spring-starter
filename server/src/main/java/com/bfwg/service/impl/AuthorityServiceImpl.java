@@ -1,6 +1,6 @@
 package com.bfwg.service.impl;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.bfwg.model.Authority;
@@ -16,21 +16,10 @@ public class AuthorityServiceImpl implements AuthorityService {
     private final AuthorityRepository authorityRepository;
 
     @Override
-    public List<Authority> findById(Long id) {
-        // TODO Auto-generated method stub
-
-        Authority auth = this.authorityRepository.getOne(id);
-        List<Authority> auths = new ArrayList<>();
-        auths.add(auth);
-        return auths;
-    }
-
-    @Override
     public List<Authority> findByName(UserRoleName name) {
-        // TODO Auto-generated method stub
-        Authority auth = this.authorityRepository.findByName(name);
-        List<Authority> auths = new ArrayList<>();
-        auths.add(auth);
-        return auths;
+        return authorityRepository
+                .findByName(name)
+                .map(List::of)
+                .orElse(Collections.emptyList());
     }
 }

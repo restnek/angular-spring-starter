@@ -6,7 +6,5 @@ import com.bfwg.model.Authority;
 import com.bfwg.model.UserRoleName;
 
 public interface AuthorityService {
-    List<Authority> findById(Long id);
-
     List<Authority> findByName(UserRoleName name);
 }

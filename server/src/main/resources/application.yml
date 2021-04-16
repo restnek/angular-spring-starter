@@ -12,14 +12,13 @@ spring:
     console:
       enabled: false
 
-app:
-  name: angular-spring-jwt
-
-jwt:
-  header: Authorization
-  expires_in: 600 # 10 minutes
-  secret: queenvictoria
-  cookie: AUTH-TOKEN
+security:
+  jwt:
+    issuer: angular-spring-jwt
+    header: Authorization
+    expires_in: 600 # 10 minutes
+    secret: queenvictoria
+    cookie: AUTH-TOKEN
 
 logging:
   level:

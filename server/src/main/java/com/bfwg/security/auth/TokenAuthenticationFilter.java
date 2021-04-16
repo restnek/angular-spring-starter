@@ -11,24 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bfwg.security.TokenHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-    @Autowired
-    private TokenHelper tokenHelper;
-
-    @Autowired
-    @Qualifier("customUserDetailsService")
-    private UserDetailsService userDetailsService;
+    private final TokenHelper tokenHelper;
+    private final UserDetailsService userDetailsService;
 
     /*
      * The below paths will get ignored by the filter
@@ -61,19 +57,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         String authToken = tokenHelper.getToken(request);
         if (authToken != null && !skipPathRequest(request, pathsToSkip)) {
-            // get username from token
-            try {
-                String username = tokenHelper.getUsernameFromToken(authToken);
-                // get user
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                // create authentication
-                TokenBasedAuthentication authentication =
-                        new TokenBasedAuthentication(userDetails);
-                authentication.setToken(authToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (Exception e) {
-                SecurityContextHolder.getContext().setAuthentication(new AnonAuthentication());
-            }
+            Authentication authentication = getAuthenticationFromToken(authToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             SecurityContextHolder.getContext().setAuthentication(new AnonAuthentication());
         }
@@ -81,8 +66,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
+    private Authentication getAuthenticationFromToken(String authToken) {
+        try {
+            String username = tokenHelper.getUsernameFromToken(authToken);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            return new TokenBasedAuthentication(userDetails, authToken);
+        } catch (Exception e) {
+            return new AnonAuthentication();
+        }
+    }
+
     private boolean skipPathRequest(HttpServletRequest request, List<String> pathsToSkip) {
-        Assert.notNull(pathsToSkip, "path cannot be null.");
         List<RequestMatcher> m = pathsToSkip.stream()
                 .map(AntPathRequestMatcher::new)
                 .collect(Collectors.toList());

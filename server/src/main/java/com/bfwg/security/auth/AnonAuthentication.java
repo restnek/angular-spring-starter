@@ -21,20 +21,4 @@ public class AnonAuthentication extends AbstractAuthenticationToken {
     public boolean isAuthenticated() {
         return true;
     }
-
-    @Override
-    public int hashCode() {
-        return 7;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        return getClass() == obj.getClass();
-    }
 }

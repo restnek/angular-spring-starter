@@ -1,20 +1,20 @@
 package com.bfwg.rest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.bfwg.config.WebSecurityConfig;
+import com.bfwg.config.JwtProperties;
 import com.bfwg.model.UserTokenState;
 import com.bfwg.security.TokenHelper;
+import com.bfwg.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,14 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AuthenticationController {
+    private final UserService userService;
     private final TokenHelper tokenHelper;
-    private final WebSecurityConfig userDetailsService;
-
-    @Value("${jwt.expires_in}")
-    private int EXPIRES_IN;
-
-    @Value("${jwt.cookie}")
-    private String TOKEN_COOKIE;
+    private final JwtProperties jwtProperties;
 
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshAuthenticationToken(
@@ -44,14 +39,16 @@ public class AuthenticationController {
             // TODO check user password last update
             String refreshedToken = tokenHelper.refreshToken(authToken);
 
-            Cookie authCookie = new Cookie(TOKEN_COOKIE, (refreshedToken));
+            Cookie authCookie = new Cookie(jwtProperties.getCookie(), (refreshedToken));
             authCookie.setPath("/");
             authCookie.setHttpOnly(true);
-            authCookie.setMaxAge(EXPIRES_IN);
+            authCookie.setMaxAge(jwtProperties.getExpiration());
             // Add cookie to response
             response.addCookie(authCookie);
 
-            UserTokenState userTokenState = new UserTokenState(refreshedToken, EXPIRES_IN);
+            UserTokenState userTokenState = new UserTokenState(
+                    refreshedToken,
+                    jwtProperties.getExpiration());
             return ResponseEntity.ok(userTokenState);
         } else {
             UserTokenState userTokenState = new UserTokenState();
@@ -62,14 +59,15 @@ public class AuthenticationController {
     @PostMapping("/changePassword")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> changePassword(
-            @RequestBody PasswordChanger passwordChanger) throws Exception {
+            @RequestBody PasswordChanger passwordChanger,
+            Authentication authentication) {
 
-        userDetailsService.changePassword(
+        userService.changePassword(
+                authentication.getName(),
                 passwordChanger.oldPassword,
                 passwordChanger.newPassword);
-        Map<String, String> result = new HashMap<>();
-        result.put("result", "success");
-        return ResponseEntity.accepted().body(result);
+        Map<String, String> body = Map.of("result", "success");
+        return ResponseEntity.accepted().body(body);
     }
 
     static class PasswordChanger {
