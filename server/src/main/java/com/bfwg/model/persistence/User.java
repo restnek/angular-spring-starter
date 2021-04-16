@@ -6,9 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -23,11 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @Entity
 @Table(name = "users")
-public class User implements UserDetails, Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class User extends BaseEntity implements UserDetails, Serializable {
     private String username;
 
     @JsonIgnore
