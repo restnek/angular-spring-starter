@@ -1,4 +1,4 @@
-package com.bfwg.model;
+package com.bfwg.model.persistence;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.bfwg.model;
+package com.bfwg.model.persistence;
 
 public enum UserRoleName {
     ROLE_USER,

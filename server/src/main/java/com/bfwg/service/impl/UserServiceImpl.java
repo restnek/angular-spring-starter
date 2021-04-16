@@ -2,10 +2,10 @@ package com.bfwg.service.impl;
 
 import java.util.List;
 
-import com.bfwg.model.Authority;
-import com.bfwg.model.User;
-import com.bfwg.model.UserRequest;
-import com.bfwg.model.UserRoleName;
+import com.bfwg.model.persistence.Authority;
+import com.bfwg.model.persistence.User;
+import com.bfwg.model.persistence.UserRoleName;
+import com.bfwg.model.request.UserRequest;
 import com.bfwg.repository.UserRepository;
 import com.bfwg.service.AuthorityService;
 import com.bfwg.service.UserService;

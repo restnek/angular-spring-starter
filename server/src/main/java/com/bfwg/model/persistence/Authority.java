@@ -1,4 +1,4 @@
-package com.bfwg.model;
+package com.bfwg.model.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

@@ -2,8 +2,8 @@ package com.bfwg.service;
 
 import java.util.List;
 
-import com.bfwg.model.User;
-import com.bfwg.model.UserRequest;
+import com.bfwg.model.persistence.User;
+import com.bfwg.model.request.UserRequest;
 
 public interface UserService {
     void resetCredentials();

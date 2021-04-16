@@ -7,7 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bfwg.config.JwtProperties;
-import com.bfwg.model.UserTokenState;
+import com.bfwg.model.request.PasswordChanger;
+import com.bfwg.model.response.UserTokenState;
 import com.bfwg.security.TokenHelper;
 import com.bfwg.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -64,14 +65,9 @@ public class AuthenticationController {
 
         userService.changePassword(
                 authentication.getName(),
-                passwordChanger.oldPassword,
-                passwordChanger.newPassword);
+                passwordChanger.getOldPassword(),
+                passwordChanger.getNewPassword());
         Map<String, String> body = Map.of("result", "success");
         return ResponseEntity.accepted().body(body);
-    }
-
-    static class PasswordChanger {
-        public String oldPassword;
-        public String newPassword;
     }
 }

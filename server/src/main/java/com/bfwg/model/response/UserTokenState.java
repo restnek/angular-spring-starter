@@ -1,4 +1,4 @@
-package com.bfwg.model;
+package com.bfwg.model.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +14,8 @@ public class UserTokenState {
         this.expiresIn = null;
     }
 
-    public UserTokenState(String access_token, long expires_in) {
-        this.accessToken = access_token;
-        this.expiresIn = expires_in;
+    public UserTokenState(String accessToken, long expiresIn) {
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
     }
 }

@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bfwg.config.JwtProperties;
-import com.bfwg.model.User;
-import com.bfwg.model.UserTokenState;
+import com.bfwg.model.persistence.User;
+import com.bfwg.model.response.UserTokenState;
 import com.bfwg.security.TokenHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.bfwg.exception.ResourceConflictException;
-import com.bfwg.model.User;
-import com.bfwg.model.UserRequest;
+import com.bfwg.model.persistence.User;
+import com.bfwg.model.request.UserRequest;
 import com.bfwg.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
