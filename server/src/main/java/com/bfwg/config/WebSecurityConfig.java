@@ -9,8 +9,6 @@ import com.bfwg.security.auth.TokenAuthenticationFilter;
 import com.bfwg.service.impl.UserDetailsLoaderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,7 +22,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@Slf4j
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
@@ -39,11 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder)
-            throws Exception {
-
-        authenticationManagerBuilder
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
                 .userDetailsService(jwtUserDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
