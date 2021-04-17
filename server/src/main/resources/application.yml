@@ -32,8 +32,3 @@ security:
     signature-algorithm: HS256
     header: Authorization
     cookie: AUTH-TOKEN
-
-logging:
-  level:
-    org.springframework.web: ERROR
-    com.bfwg: DEBUG
