@@ -39,7 +39,6 @@ export class SignupComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
-
   }
 
   ngOnInit() {
@@ -76,19 +75,15 @@ export class SignupComponent implements OnInit, OnDestroy {
 
     this.authService.signup(this.form.value)
       .subscribe(data => {
-          console.log(data);
-          this.authService.login(this.form.value).subscribe(() => {
-            this.userService.getMyInfo().subscribe();
-          });
-          this.router.navigate([this.returnUrl]);
-        },
-        error => {
-          this.submitted = false;
-          console.log('Sign up error' + JSON.stringify(error));
-          this.notification = {msgType: 'error', msgBody: error.error.errorMessage};
+        console.log(data);
+        this.authService.login(this.form.value).subscribe(() => {
+          this.userService.getMyInfo().subscribe();
         });
-
+        this.router.navigate([this.returnUrl]);
+      }, error => {
+        this.submitted = false;
+        console.log('Sign up error' + JSON.stringify(error));
+        this.notification = {msgType: 'error', msgBody: error.error.errorMessage};
+      });
   }
-
-
 }

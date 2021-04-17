@@ -4,7 +4,6 @@ import {ConfigService} from './config.service';
 
 @Injectable()
 export class FooService {
-
   constructor(
     private apiService: ApiService,
     private config: ConfigService
@@ -14,5 +13,4 @@ export class FooService {
   getFoo() {
     return this.apiService.get(this.config.fooUrl);
   }
-
 }

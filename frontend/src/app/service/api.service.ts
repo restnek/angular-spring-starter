@@ -18,7 +18,6 @@ export enum RequestMethod {
   providedIn: 'root'
 })
 export class ApiService {
-
   headers = new HttpHeaders({
     Accept: 'application/json',
     'Content-Type': 'application/json'
@@ -74,5 +73,4 @@ export class ApiService {
     }
     throw error;
   }
-
 }

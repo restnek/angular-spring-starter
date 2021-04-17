@@ -6,7 +6,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   styleUrls: ['./api-card.component.scss']
 })
 export class ApiCardComponent implements OnInit {
-
   @Input() title: string;
   @Input() subTitle: string;
   @Input() imgUrl: string;
@@ -16,9 +15,6 @@ export class ApiCardComponent implements OnInit {
   expand = false;
 
   @Output() apiClick: EventEmitter<any> = new EventEmitter();
-
-  constructor() {
-  }
 
   ngOnInit() {
     console.log(this.responseObj);
@@ -41,5 +37,4 @@ export class ApiCardComponent implements OnInit {
     }
     return rClass.join(' ');
   }
-
 }

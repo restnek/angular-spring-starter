@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ConfigService, FooService, UserService} from '../service';
 
 @Component({
@@ -6,8 +6,7 @@ import {ConfigService, FooService, UserService} from '../service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
-
+export class HomeComponent {
   fooResponse = {};
   whoamIResponse = {};
   allUserResponse = {};
@@ -17,9 +16,6 @@ export class HomeComponent implements OnInit {
     private fooService: FooService,
     private userService: UserService
   ) {
-  }
-
-  ngOnInit() {
   }
 
   makeRequest(path) {
@@ -65,5 +61,4 @@ export class HomeComponent implements OnInit {
       obj.body = JSON.stringify(res, null, 2);
     }
   }
-
 }

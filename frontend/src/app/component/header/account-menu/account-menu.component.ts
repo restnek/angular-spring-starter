@@ -8,7 +8,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./account-menu.component.scss']
 })
 export class AccountMenuComponent implements OnInit {
-
   // TODO define user interface
   user: any;
 

@@ -7,7 +7,6 @@ import {map} from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     private apiService: ApiService,
     private userService: UserService,
@@ -49,5 +48,4 @@ export class AuthService {
   changePassowrd(passwordChanger) {
     return this.apiService.post(this.config.changePasswordUrl, passwordChanger);
   }
-
 }

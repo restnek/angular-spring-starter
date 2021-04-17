@@ -4,7 +4,6 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class ConfigService {
-
   private apiUrl = '/api';
   private userUrl = this.apiUrl + '/user';
 
@@ -61,5 +60,4 @@ export class ConfigService {
   get signupUrl(): string {
     return this._signupUrl;
   }
-
 }

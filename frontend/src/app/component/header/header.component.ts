@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AuthService, UserService} from '../../service';
 import {Router} from '@angular/router';
 
@@ -7,16 +7,12 @@ import {Router} from '@angular/router';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
-
+export class HeaderComponent {
   constructor(
     private userService: UserService,
     private authService: AuthService,
     private router: Router
   ) {
-  }
-
-  ngOnInit() {
   }
 
   logout() {
@@ -33,5 +29,4 @@ export class HeaderComponent implements OnInit {
     const user = this.userService.currentUser;
     return user.firstname + ' ' + user.lastname;
   }
-
 }

@@ -11,8 +11,8 @@ import {mergeMap} from 'rxjs/operators';
   styleUrls: ['./change-password.component.scss']
 })
 export class ChangePasswordComponent implements OnInit {
-
   form: FormGroup;
+
   /**
    * Boolean used in telling the UI
    * that the form has been submitted
@@ -34,14 +34,11 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.form = this.formBuilder.group({
       oldPassword: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)])],
       newPassword: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)])]
     });
-
   }
-
 
   onSubmit() {
     /**
@@ -58,7 +55,5 @@ export class ChangePasswordComponent implements OnInit {
         this.submitted = false;
         this.notification = {msgType: 'error', msgBody: 'Invalid old password.'};
       });
-
   }
-
 }

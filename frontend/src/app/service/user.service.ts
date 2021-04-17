@@ -7,7 +7,6 @@ import {map} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-
   currentUser;
 
   constructor(
@@ -42,5 +41,4 @@ export class UserService {
   getAll() {
     return this.apiService.get(this.config.usersUrl);
   }
-
 }

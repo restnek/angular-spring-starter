@@ -4,8 +4,4 @@ import {Component} from '@angular/core';
   templateUrl: './not-found.component.html'
 })
 export class NotFoundComponent {
-
-  constructor() {
-  }
-
 }

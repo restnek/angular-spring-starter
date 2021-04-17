@@ -4,7 +4,6 @@ import {UserService} from '../service';
 
 @Injectable()
 export class GuestGuard implements CanActivate {
-
   constructor(private router: Router, private userService: UserService) {
   }
 
