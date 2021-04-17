@@ -1,8 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {HomeComponent} from './home.component';
-import {ApiCardComponent, GithubComponent} from '../component';
+import {ApiCardComponent} from '../component';
 import {MockApiService} from '../service/mocks/api.service.mock';
-
 
 import {ApiService, AuthService, ConfigService, FooService, UserService} from '../service';
 import {MatButtonModule} from '@angular/material/button';
@@ -16,8 +15,7 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         HomeComponent,
-        ApiCardComponent,
-        GithubComponent
+        ApiCardComponent
       ],
       imports: [
         MatButtonModule,
