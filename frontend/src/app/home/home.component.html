@@ -1,39 +1,40 @@
-<div class="content" fxLayout="row" fxLayoutAlign="center none">
+<div
+  fxFlex
+  fxLayout="row"
+  fxLayout.xs="column"
+  fxLayoutAlign="center none"
+  fxLayoutGap="50px"
+  fxLayoutGap.lt-lg="15px"
+>
   <app-api-card
-    (apiClick)="makeRequest($event)"
-    [responseObj]="fooResponse"
-    apiText="/api/foo"
-    content='This is an demo public endpoint which requires no authentication.'
     fxFlex
+    path="/api/foo"
+    content="This is an demo public endpoint which requires no authentication."
     imgUrl="assets/image/foo.png"
     subTitle="Public"
-    title='"Foo"'
+    title="&quot;Foo&quot;"
   >
   </app-api-card>
 
   <app-api-card
-    (apiClick)="makeRequest($event)"
-    [responseObj]="whoamIResponse"
-    apiText="/api/whoami"
-    content='The regular endpoint which returns the current user information. You have to sign in as either a User or an Admin to gain the access to this endpoint.'
     fxFlex
+    path="/api/auth/whoami"
+    content="The regular endpoint which returns the current user information. You have to sign in as either a User or an Admin to gain the access to this endpoint."
     imgUrl="assets/image/user.png"
     subTitle="Authorized role: USER"
-    title='"Who am I"'
+    title="&quot;Who am I&quot;"
+    secure="true"
   >
   </app-api-card>
 
   <app-api-card
-    (apiClick)="makeRequest($event)"
-    [responseObj]="allUserResponse"
-    apiText="/api/user/all"
-    class="last"
-    content='This endpoint will give you a list of all the users. You have to sign in as an Admin to gain the access to this endpoint.'
     fxFlex
+    path="/api/users"
+    content="This endpoint will give you a list of all the users. You have to sign in as an Admin to gain the access to this endpoint."
     imgUrl="assets/image/admin.png"
     subTitle="Authorized role: ADMIN"
-    title='"All users"'
+    title="&quot;All users&quot;"
+    secure="true"
   >
   </app-api-card>
 </div>
-<app-github></app-github>

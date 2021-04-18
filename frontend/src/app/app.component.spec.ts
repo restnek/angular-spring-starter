@@ -11,7 +11,7 @@ import {AngularMaterialModule} from './angular-material/angular-material.module'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
-import {HomeComponent} from './home';
+import {HomeComponent} from './home/home.component';
 import {LoginComponent} from './login';
 import {NotFoundComponent} from './not-found';
 import {AccountMenuComponent} from './component/header/account-menu/account-menu.component';

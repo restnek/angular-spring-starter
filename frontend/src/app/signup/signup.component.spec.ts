@@ -6,7 +6,7 @@ import {AngularMaterialModule} from '../angular-material/angular-material.module
 import {HttpClientModule} from '@angular/common/http';
 import {ApiService, AuthService, ConfigService, FooService, UserService} from '../service';
 import {AppRoutingModule} from '../app-routing.module';
-import {HomeComponent} from '../home';
+import {HomeComponent} from '../home/home.component';
 import {LoginComponent} from '../login';
 import {ChangePasswordComponent} from '../change-password';
 import {MockApiService} from '../service/mocks';
