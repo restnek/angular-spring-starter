@@ -13,7 +13,7 @@ import {MockApiService} from '../service/mocks';
 import {AdminComponent} from '../admin';
 import {NotFoundComponent} from '../not-found';
 import {ForbiddenComponent} from '../forbidden';
-import {ApiCardComponent} from '../component/api-card';
+import {ApiCardComponent} from '../component/api-card/api-card.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('SignupComponent', () => {

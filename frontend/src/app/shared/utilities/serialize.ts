@@ -1,7 +1,11 @@
 import {HttpParams} from '@angular/common/http';
 import {looseInvalid} from './loose-invalid';
 
-export function serialize(obj: any): HttpParams {
+export function serialize(obj: any): HttpParams | undefined {
+  if (obj === undefined) {
+    return undefined;
+  }
+
   let params = new HttpParams();
 
   for (const key in obj) {

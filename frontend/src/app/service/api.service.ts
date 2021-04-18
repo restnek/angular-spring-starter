@@ -27,18 +27,13 @@ export class ApiService {
   }
 
   get(path: string, args?: any): Observable<any> {
-    const options = {
+    return this.http.get(path, {
       headers: this.headers,
-      withCredentials: true,
-      params: undefined
-    };
-
-    if (args) {
-      options.params = serialize(args);
-    }
-
-    return this.http.get(path, options)
-      .pipe(catchError(this.checkError.bind(this)));
+      observe: 'response',
+      responseType: 'json',
+      params: serialize(args),
+      withCredentials: true
+    });
   }
 
   post(path: string, body: any, customHeaders?: HttpHeaders): Observable<any> {

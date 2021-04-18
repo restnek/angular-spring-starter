@@ -1,9 +1,10 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title><b>{{title}}</b></mat-card-title>
+    <mat-card-title>{{title}}</mat-card-title>
     <mat-card-subtitle>{{subTitle}}</mat-card-subtitle>
+    <div [ngClass]="secure ? 'secure' : 'public'" mat-card-avatar></div>
   </mat-card-header>
-  <img [src]="imgUrl" mat-card-image>
+  <img [src]="imgUrl" alt="Card image" mat-card-image>
   <mat-card-content>
     <p>
       {{content}}
@@ -14,13 +15,21 @@
       (click)="onButtonClick()"
       color="primary"
       mat-raised-button>
-      {{apiText}}
+      {{path}}
     </button>
   </mat-card-actions>
-  <div [class]="responsePanelClass()">
-    <pre>Path: {{responseObj.path}}</pre>
-    <pre>Method: {{responseObj.method}}</pre>
-    <pre>Status: {{responseObj.status}}</pre>
-    <pre>Message: {{responseObj.body || responseObj.message}} </pre>
+  <div
+    *ngIf="expand"
+    [class.response-success]="response?.result === 'success'"
+    [class.response-error]="response?.result === 'error'"
+    class="response"
+  >
+    <mat-spinner diameter="25" *ngIf="!response; else responseContent"></mat-spinner>
+    <ng-template #responseContent>
+      <pre>Path: {{response.path}}</pre>
+      <pre>Status: {{response.status}}</pre>
+      <pre>Status text: {{response.statusText}}</pre>
+      <pre>Message: {{response.body | json}}</pre>
+    </ng-template>
   </div>
 </mat-card>
