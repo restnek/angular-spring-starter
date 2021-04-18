@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService, ConfigService, UserService} from '../../../service';
+import {Component} from '@angular/core';
+import {AuthService} from '../../../service';
 import {Router} from '@angular/router';
 
 @Component({
@@ -7,20 +7,11 @@ import {Router} from '@angular/router';
   templateUrl: './account-menu.component.html',
   styleUrls: ['./account-menu.component.scss']
 })
-export class AccountMenuComponent implements OnInit {
-  // TODO define user interface
-  user: any;
-
+export class AccountMenuComponent {
   constructor(
-    private config: ConfigService,
     private authService: AuthService,
-    private router: Router,
-    private userService: UserService
+    private router: Router
   ) {
-  }
-
-  ngOnInit() {
-    this.user = this.userService.currentUser;
   }
 
   logout() {

@@ -1,3 +1,3 @@
-export * from './header';
-export * from './footer/footer.component';
-export * from './api-card/api-card.component';
+export {HeaderComponent} from './header/header.component';
+export {FooterComponent} from './footer/footer.component';
+export {ApiCardComponent} from './api-card/api-card.component';
