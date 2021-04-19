@@ -1,44 +1,23 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from './api.service';
-import {ConfigService} from './config.service';
-import {map} from 'rxjs/operators';
+import {UrlService} from './url.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  currentUser;
-
   constructor(
     private apiService: ApiService,
-    private config: ConfigService
+    private urls: UrlService
   ) {
   }
 
-  initUser() {
-    const promise = this.apiService.get(this.config.refreshTokenUrl).toPromise()
-      .then(res => {
-        if (res.access_token !== null) {
-          return this.getMyInfo().toPromise()
-            .then(user => {
-              this.currentUser = user;
-            });
-        }
-      })
-      .catch(() => null);
-    return promise;
-  }
-
-  resetCredentials() {
-    return this.apiService.get(this.config.resetCredentialsUrl);
-  }
-
-  getMyInfo() {
-    return this.apiService.get(this.config.whoamiUrl)
-      .pipe(map(user => this.currentUser = user));
-  }
-
   getAll() {
-    return this.apiService.get(this.config.usersUrl);
+    return this.apiService.get(this.urls.users);
+  }
+
+  getById(id: number) {
+    const path = this.urls.resolve(this.urls.users, id);
+    return this.apiService.get(path);
   }
 }

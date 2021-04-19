@@ -47,8 +47,13 @@ public class AuthenticationController {
                         .getUserById(savedUser.getId()))
                 .build()
                 .toUri();
+
+        String token = tokenHelper.generateToken(savedUser.getUsername());
+        ResponseCookie authCookie = tokenHelper.generateCookieWithToken(token);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
+        headers.set(HttpHeaders.SET_COOKIE, authCookie.toString());
 
         return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
     }

@@ -12,7 +12,7 @@ import {NotFoundComponent} from './not-found';
 import {AccountMenuComponent} from './component/header/account-menu/account-menu.component';
 import {ApiCardComponent, FooterComponent, HeaderComponent} from './component';
 
-import {ApiService, AuthService, ConfigService, FooService, UserService} from './service';
+import {ApiService, AuthService, UrlService, FooService, UserService} from './service';
 import {ChangePasswordComponent} from './change-password';
 import {ForbiddenComponent} from './forbidden';
 import {AdminComponent} from './admin';
@@ -55,7 +55,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
     AuthService,
     ApiService,
     UserService,
-    ConfigService,
+    UrlService,
     MatIconRegistry
   ],
   bootstrap: [AppComponent],

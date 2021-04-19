@@ -1,50 +1,71 @@
 import {Injectable} from '@angular/core';
-import {HttpHeaders} from '@angular/common/http';
+import {HttpHeaders, HttpParams} from '@angular/common/http';
 import {ApiService} from './api.service';
-import {UserService} from './user.service';
-import {ConfigService} from './config.service';
+import {UrlService} from './url.service';
 import {map} from 'rxjs/operators';
 
-@Injectable()
+interface LoginRequest {
+  username: string,
+  password: string
+}
+
+interface SignUpRequest {
+  username: string,
+  password: string,
+  firstname: string,
+  lastname: string
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
+  currentUser;
+
   constructor(
     private apiService: ApiService,
-    private userService: UserService,
-    private config: ConfigService,
+    private urls: UrlService
   ) {
   }
 
-  login(user) {
-    const loginHeaders = new HttpHeaders({
+  isSignedIn() {
+    return !!this.currentUser;
+  }
+
+  login(user: LoginRequest) {
+    const headers = new HttpHeaders({
       Accept: 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded'
     });
-    const body = `username=${user.username}&password=${user.password}`;
-    return this.apiService.post(this.config.loginUrl, body, loginHeaders)
-      .pipe(map(() => {
-        console.log('Login success');
-        this.userService.getMyInfo().subscribe();
+
+    const body = new HttpParams()
+      .set('username', user.username)
+      .set('password', user.password);
+
+    return this.apiService.post(this.urls.auth.login, body, headers)
+      .pipe(map(res => {
+        this.currentUser = res.body;
+      }))
+  }
+
+  signup(user: SignUpRequest) {
+    return this.apiService.post(this.urls.auth.signUp, JSON.stringify(user))
+      .pipe(map(res => {
+        this.currentUser = res.body;
       }));
   }
 
-  signup(user) {
-    return this.apiService.post(
-      this.config.signupUrl,
-      JSON.stringify(user),
-      new HttpHeaders({
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+  whoAmI() {
+    return this.apiService.get(this.urls.auth.whoAmI)
+      .pipe(map(res => {
+        this.currentUser = res.body;
       }));
   }
 
   logout() {
-    return this.apiService.post(this.config.logoutUrl, {})
+    return this.apiService.post(this.urls.auth.logout)
       .pipe(map(() => {
-        this.userService.currentUser = null;
+        this.currentUser = null;
       }));
-  }
-
-  changePassowrd(passwordChanger) {
-    return this.apiService.post(this.config.changePasswordUrl, passwordChanger);
   }
 }

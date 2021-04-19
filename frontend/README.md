@@ -23,7 +23,7 @@ angular-spring-starter/frontend
  │   │   ├──service
  │   │   │   ├──api.service.ts                                  * base api service class, the parent class for all api related services
  │   │   │   ├──auth.service.ts                                 * auth related api service like /login /logout
- │   │   │   ├──config.service.ts                               * global api path config file, this service stores all the app related api paths
+ │   │   │   ├──url.service.ts                               * global api path config file, this service stores all the app related api paths
  │   │   │   ├──foo.service.ts                                  * demo public api service FOO
  │   │   │   └──user.service.ts                                 * service for init user info and view user info
  │   │   │       ├──DeleteableModelRepository.java              * base repository that overwrites the findAll method.

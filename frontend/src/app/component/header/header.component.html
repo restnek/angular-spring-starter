@@ -5,14 +5,14 @@
   </button>
 
   <div fxFlex fxHide.lt-sm fxLayoutAlign="end none">
-    <button *ngIf="!hasSignedIn()" routerLink="/login" mat-button mat-ripple>
+    <button *ngIf="!isSignedIn()" routerLink="/login" mat-button mat-ripple>
       <mat-icon>account_circle</mat-icon>
       Login
     </button>
-    <button *ngIf="!hasSignedIn()" routerLink="/signup" mat-button mat-ripple>
+    <button *ngIf="!isSignedIn()" routerLink="/signup" mat-button mat-ripple>
       <mat-icon>person_add</mat-icon>
       Sign up
     </button>
-    <app-account-menu *ngIf="hasSignedIn()"></app-account-menu>
+    <app-account-menu *ngIf="isSignedIn()"></app-account-menu>
   </div>
 </mat-toolbar>

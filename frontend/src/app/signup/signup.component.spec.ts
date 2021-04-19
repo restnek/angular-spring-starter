@@ -4,11 +4,11 @@ import {SignupComponent} from './signup.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AngularMaterialModule} from '../angular-material/angular-material.module';
 import {HttpClientModule} from '@angular/common/http';
-import {ApiService, AuthService, ConfigService, FooService, UserService} from '../service';
+import {ApiService, AuthService, UrlService, FooService, UserService} from '../service';
 import {AppRoutingModule} from '../app-routing.module';
 import {HomeComponent} from '../home/home.component';
-import {LoginComponent} from '../login';
-import {ChangePasswordComponent} from '../change-password';
+import {LoginComponent} from '../login/login.component';
+import {ChangePasswordComponent} from '../change-password/change-password.component';
 import {MockApiService} from '../service/mocks';
 import {AdminComponent} from '../admin';
 import {NotFoundComponent} from '../not-found';
@@ -47,7 +47,7 @@ describe('SignupComponent', () => {
         AuthService,
         UserService,
         FooService,
-        ConfigService
+        UrlService
       ]
     })
       .compileComponents();
