@@ -7,7 +7,7 @@ import {AdminGuard, GuestGuard, LoginGuard} from './guard';
 import {NotFoundComponent} from './not-found';
 import {ChangePasswordComponent} from './change-password';
 import {ForbiddenComponent} from './forbidden';
-import {SignupComponent} from './signup';
+import {SignupComponent} from './signup/signup.component';
 
 export const routes: Routes = [
   {

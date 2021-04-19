@@ -18,7 +18,7 @@ import {AccountMenuComponent} from './component/header/account-menu/account-menu
 import {ChangePasswordComponent} from './change-password';
 import {ForbiddenComponent} from './forbidden';
 import {AdminComponent} from './admin';
-import {SignupComponent} from './signup';
+import {SignupComponent} from './signup/signup.component';
 import {MatIconRegistry} from '@angular/material/icon';
 
 describe('AppComponent', () => {

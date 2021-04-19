@@ -16,7 +16,7 @@ import {ApiService, AuthService, ConfigService, FooService, UserService} from '.
 import {ChangePasswordComponent} from './change-password';
 import {ForbiddenComponent} from './forbidden';
 import {AdminComponent} from './admin';
-import {SignupComponent} from './signup';
+import {SignupComponent} from './signup/signup.component';
 import {AngularMaterialModule} from './angular-material/angular-material.module';
 import {MatIconRegistry} from '@angular/material/icon';
 import {FlexLayoutModule} from '@angular/flex-layout';

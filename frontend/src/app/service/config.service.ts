@@ -55,7 +55,7 @@ export class ConfigService {
     return this._fooUrl;
   }
 
-  private _signupUrl = this.apiUrl + '/signup';
+  private _signupUrl = this.apiUrl + '/auth/signup';
 
   get signupUrl(): string {
     return this._signupUrl;

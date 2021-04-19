@@ -28,13 +28,12 @@ export class AuthService {
   }
 
   signup(user) {
-    const signupHeaders = new HttpHeaders({
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    });
-    return this.apiService.post(this.config.signupUrl, JSON.stringify(user), signupHeaders)
-      .pipe(map(() => {
-        console.log('Sign up success');
+    return this.apiService.post(
+      this.config.signupUrl,
+      JSON.stringify(user),
+      new HttpHeaders({
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       }));
   }
 
