@@ -1,45 +1,50 @@
-<div class="content" fxLayout="row" fxLayoutAlign="center">
+<mat-card>
+  <mat-card-title>
+    <h2>Login</h2>
+  </mat-card-title>
 
-  <mat-card elevation="5" fxFlex>
+  <mat-card-content>
+    <form fxFlex fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="standard">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" required>
+        <mat-error>
+          <ng-container *ngIf="controls.username.errors?.notblank; else usernameLength">
+            Username can't be blank
+          </ng-container>
+          <ng-template #usernameLength>
+            <ng-container *ngIf="controls.username.errors?.minlength || controls.username.errors?.maxlength">
+              Username must be between 4 and 20 characters long
+            </ng-container>
+          </ng-template>
+        </mat-error>
+      </mat-form-field>
 
-    <mat-card-subtitle>
-      <h2>Angular Spring Starter</h2>
-    </mat-card-subtitle>
-
-    <mat-card-title>
-      <h2>{{title}}</h2>
-    </mat-card-title>
-
-    <mat-card-content>
-
-      <p *ngIf="notification" [class]="notification.msgType">{{notification.msgBody}}</p>
-
-      <form #loginForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="!submitted" [formGroup]="form">
-        <mat-form-field>
-          <input formControlName="username" matInput placeholder="user/admin" required>
-        </mat-form-field>
-        <mat-form-field>
-          <input formControlName="password" matInput placeholder="123" required type="password">
-        </mat-form-field>
-        <button [disabled]="!loginForm.form.valid" color="primary" mat-raised-button type="submit">Login</button>
-      </form>
-      <br>
-      <div *ngIf="!submitted">
-        <button (click)="onResetCredentials()" color="accent"
-                mat-raised-button matTooltip="Reset password if someone has changed it already!">Reset Credentials
+      <mat-form-field appearance="standard">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+        <button
+          matSuffix
+          mat-icon-button
+          (click)="togglePasswordVisibility($event)"
+          class="button-input-visibility"
+          type="button"
+        >
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-      </div>
+        <mat-error>
+          <ng-container *ngIf="controls.password.errors?.notblank; else passwordMaxLength">
+            Password can't be blank
+          </ng-container>
+          <ng-template #passwordMaxLength>
+            <ng-container *ngIf="controls.password.errors?.maxlength">
+              Password must be less than 100 characters
+            </ng-container>
+          </ng-template>
+        </mat-error>
+      </mat-form-field>
 
-      <mat-spinner *ngIf="submitted" mode="indeterminate"></mat-spinner>
-      <br>
-      <hr>
-
-      <p><i>Created by <a href="https://github.com/bfwg">Fan Jin</a></i></p>
-      <p><i>Click below to go to repository</i></p>
-      <button (click)="repository()" color="accent" mat-raised-button>GitHub Repository</button>
-
-    </mat-card-content>
-
-  </mat-card>
-
-</div>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Login</button>
+    </form>
+  </mat-card-content>
+</mat-card>

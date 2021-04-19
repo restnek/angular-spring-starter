@@ -5,91 +5,106 @@ import {DisplayMessage} from '../shared/models/display-message';
 import {AuthService, UserService} from '../service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {CustomValidators} from '../shared/validation';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
-  title = 'Login';
-  githubLink = 'https://github.com/bfwg/angular-spring-starter';
-  form: FormGroup;
+export class LoginComponent {
+  loginForm: FormGroup;
+  returnUrl: string;
+  hidePassword = true;
 
   /**
    * Boolean used in telling the UI
    * that the form has been submitted
    * and is awaiting a response
    */
-  submitted = false;
+  // submitted = false;
 
   /**
    * Notification message from received
    * form request or router
    */
-  notification: DisplayMessage;
+  // notification: DisplayMessage;
 
-  returnUrl: string;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  // private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
-    private userService: UserService,
+    // private userService: UserService,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
+    this.initLoginForm();
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
 
-  ngOnInit() {
-    this.route.params
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((params: DisplayMessage) => {
-        this.notification = params;
-      });
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
-    this.form = this.formBuilder.group({
-      username: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)])]
+  initLoginForm() {
+    this.loginForm = this.formBuilder.group({
+      username: ['', [CustomValidators.notBlank, Validators.minLength(4), Validators.maxLength(20)]],
+      password: ['', [CustomValidators.notBlank, Validators.maxLength(100)]],
     });
   }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+  get controls() {
+    return this.loginForm.controls;
   }
 
-  onResetCredentials() {
-    this.userService.resetCredentials()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(res => {
-        if (res.result === 'success') {
-          alert('Password has been reset to 123 for all accounts');
-        } else {
-          alert('Server error');
-        }
-      });
+  togglePasswordVisibility(event: MouseEvent) {
+    event.stopPropagation();
+    this.hidePassword = !this.hidePassword;
   }
 
-  repository() {
-    window.location.href = this.githubLink;
-  }
+  // ngOnInit() {
+  //   this.route.params
+  //     .pipe(takeUntil(this.ngUnsubscribe))
+  //     .subscribe((params: DisplayMessage) => {
+  //       this.notification = params;
+  //     });
+  // }
+
+  // ngOnDestroy() {
+  //   this.ngUnsubscribe.next();
+  //   this.ngUnsubscribe.complete();
+  // }
+
+  // onResetCredentials() {
+  //   this.userService.resetCredentials()
+  //     .pipe(takeUntil(this.ngUnsubscribe))
+  //     .subscribe(res => {
+  //       if (res.result === 'success') {
+  //         alert('Password has been reset to 123 for all accounts');
+  //       } else {
+  //         alert('Server error');
+  //       }
+  //     });
+  // }
 
   onSubmit() {
-    /**
-     * Innocent until proven guilty
-     */
-    this.notification = undefined;
-    this.submitted = true;
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value)
+        .subscribe(res => {
+          console.log(res);
+          this.router.navigateByUrl(this.returnUrl);
+        }, err => {
+          console.log(err);
+        });
+    }
 
-    this.authService.login(this.form.value)
-      .subscribe(data => {
-        this.userService.getMyInfo().subscribe();
-        this.router.navigate([this.returnUrl]);
-      }, error => {
-        this.submitted = false;
-        this.notification = {msgType: 'error', msgBody: 'Incorrect username or password.'};
-      });
+  //   this.notification = undefined;
+  //   this.submitted = true;
+  //
+  //   this.authService.login(this.form.value)
+  //     .subscribe(data => {
+  //       this.userService.getMyInfo().subscribe();
+  //       this.router.navigate([this.returnUrl]);
+  //     }, error => {
+  //       this.submitted = false;
+  //       this.notification = {msgType: 'error', msgBody: 'Incorrect username or password.'};
+  //     });
   }
 }

@@ -5,7 +5,7 @@ import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {MockApiService} from '../service/mocks/api.service.mock';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {ApiService, AuthService, ConfigService, UserService} from '../service';
+import {ApiService, AuthService, UrlService, UserService} from '../service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -24,7 +24,7 @@ describe('LoginComponent', () => {
           provide: ApiService,
           useClass: MockApiService
         },
-        ConfigService,
+        UrlService,
         AuthService
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
