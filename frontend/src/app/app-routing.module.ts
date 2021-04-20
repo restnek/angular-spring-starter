@@ -5,7 +5,7 @@ import {LoginComponent} from './login/login.component';
 import {AdminComponent} from './admin';
 import {AdminGuard, GuestGuard, LoginGuard} from './guard';
 import {NotFoundComponent} from './not-found';
-import {ChangePasswordComponent} from './change-password';
+import {ChangePasswordComponent} from './change-password/change-password.component';
 import {ForbiddenComponent} from './forbidden';
 import {SignupComponent} from './signup/signup.component';
 

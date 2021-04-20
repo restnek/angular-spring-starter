@@ -13,7 +13,7 @@ import {AccountMenuComponent} from './component/header/account-menu/account-menu
 import {ApiCardComponent, FooterComponent, HeaderComponent} from './component';
 
 import {ApiService, AuthService, UrlService, FooService, UserService} from './service';
-import {ChangePasswordComponent} from './change-password';
+import {ChangePasswordComponent} from './change-password/change-password.component';
 import {ForbiddenComponent} from './forbidden';
 import {AdminComponent} from './admin';
 import {SignupComponent} from './signup/signup.component';
