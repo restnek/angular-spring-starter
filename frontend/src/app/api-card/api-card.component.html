@@ -1,0 +1,51 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>{{ subtitle }}</mat-card-subtitle>
+    <mat-icon
+      mat-card-avatar
+      [class.available]="available"
+    >
+      {{ available ? 'lock_open' : 'lock' }}
+    </mat-icon>
+  </mat-card-header>
+
+  <app-webp-image
+    [webpUrl]="webpUrl"
+    [fallbackImgUrl]="fallbackImgUrl"
+    alt="Card image"
+    class="mat-card-image"
+  >
+  </app-webp-image>
+
+  <mat-card-content>
+    <p>
+      {{ description }}
+    </p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button
+      (click)="onButtonClick()"
+      color="primary"
+      mat-raised-button
+    >
+      {{ path }}
+    </button>
+  </mat-card-actions>
+
+  <div
+    *ngIf="expand"
+    [class.response-success]="response?.result === 'success'"
+    [class.response-error]="response?.result === 'error'"
+    class="response"
+  >
+    <mat-spinner diameter="25" *ngIf="!response; else responseContent"></mat-spinner>
+    <ng-template #responseContent>
+      <pre>Path: {{ response.path }}</pre>
+      <pre>Status: {{ response.status }}</pre>
+      <pre>Status text: {{ response.statusText }}</pre>
+      <pre>Message: {{ response.body | json }}</pre>
+    </ng-template>
+  </div>
+</mat-card>

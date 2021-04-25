@@ -1,0 +1,90 @@
+{
+  "header": {
+    "login": "Login",
+    "signUp": "Sign Up",
+    "language": "Language",
+    "changePassword": "Change Password",
+    "logout": "Logout"
+  },
+  "home": {
+    "fooApi": {
+      "subtitle": "Public",
+      "description": "This is an demo public endpoint which requires no authentication."
+    },
+    "whoAmIApi": {
+      "subtitle": "Authorized role: USER",
+      "description": "The regular endpoint which returns the current user information. You have to sign in as either a User or an Admin to gain the access to this endpoint."
+    },
+    "usersApi": {
+      "subtitle": "Authorized role: ADMIN",
+      "description": "This endpoint will give you a list of all the users. You have to sign in as an Admin to gain the access to this endpoint."
+    }
+  },
+  "footer": {
+    "author": "Hand crafted with love by",
+    "editor": "Forked and remade by"
+  },
+  "login": {
+    "title": "Login",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Login",
+    "badCredentials": "Didn't recognize this credentials. Please try again"
+  },
+  "signUp": {
+    "title": "Sign Up",
+    "username": "Username",
+    "password": "Password",
+    "firstname": "Firstname",
+    "lastname": "Lastname",
+    "submit": "Sign Up"
+  },
+  "changePassword": {
+    "title": "Change Your Password",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "submit": "Change Password"
+  },
+  "notFound": "Page not found",
+  "common": {
+    "error": {
+      "username": {
+        "duplicate": "This username is taken",
+        "latinAlphanumeric": "Usernames must only contain latin alphanumeric",
+        "size": "Username must be between 4 and 20 characters long"
+      },
+      "password": {
+        "anyUpper": "Password must contain at least one upper character",
+        "anyLower": "Password must contain at least one lower character",
+        "anyDigit": "Password must contain at least one digit character",
+        "anySpecial": "Password must contain at least one special character",
+        "size": "Password must be between 6 and 100 characters long"
+      },
+      "firstname": {
+        "required": "Firstname can't be empty",
+        "latinLetters": "Firstname must contain only latin letters",
+        "maxlength": "Firstname must be less than 50 characters"
+      },
+      "lastname": {
+        "required": "Lastname can't be empty",
+        "latinLetters": "Lastname must contain only latin letters",
+        "maxlength": "Lastname must be less than 50 characters"
+      }
+    }
+  },
+  "notification": {
+    "server": "API server",
+    "type": {
+      "noHandler": "No handler found",
+      "unsupportedMediaType": "Unsupported media type",
+      "notReadableMessage": "JSON syntax error",
+      "validation": "Validation failed",
+      "badCredentials": "Wrong credentials",
+      "unauthorized": "Authentication required",
+      "accessDenied": "Access denied",
+      "resourceDuplicate": "Resource duplicate",
+      "resourceNotFound": "Resource not found",
+      "disconnect": "Can't connect to API server"
+    }
+  }
+}

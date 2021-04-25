@@ -1,39 +1,17 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {HomeComponent} from './home.component';
-import {ApiCardComponent} from '../component';
-import {MockApiService} from '../service/mocks/api.service.mock';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ApiService, AuthService, UrlService, FooService, UserService} from '../service';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
+import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        HomeComponent,
-        ApiCardComponent
-      ],
-      imports: [
-        MatButtonModule,
-        MatCardModule
-      ],
-      providers: [
-        {
-          provide: ApiService,
-          useClass: MockApiService
-        },
-        AuthService,
-        UserService,
-        FooService,
-        UrlService
-      ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ HomeComponent ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);

@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -41,6 +40,7 @@ public class AuthenticationController {
     public ResponseEntity<User> addUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         User savedUser = userService.save(signUpRequest);
 
+        String token = tokenHelper.generateToken(savedUser.getUsername());
         URI location = MvcUriComponentsBuilder
                 .fromMethodCall(MvcUriComponentsBuilder
                         .on(UserController.class)
@@ -48,12 +48,9 @@ public class AuthenticationController {
                 .build()
                 .toUri();
 
-        String token = tokenHelper.generateToken(savedUser.getUsername());
-        ResponseCookie authCookie = tokenHelper.generateCookieWithToken(token);
-
         HttpHeaders headers = new HttpHeaders();
+        tokenHelper.setToken(headers, token);
         headers.setLocation(location);
-        headers.set(HttpHeaders.SET_COOKIE, authCookie.toString());
 
         return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
     }
@@ -83,13 +80,16 @@ public class AuthenticationController {
         String authToken = tokenHelper.getToken(request);
         if (authToken != null && tokenHelper.canTokenBeRefreshed(authToken)) {
             String refreshedToken = tokenHelper.refreshToken(authToken);
-            ResponseCookie authCookie = tokenHelper.generateCookieWithToken(refreshedToken);
+
+            HttpHeaders headers = new HttpHeaders();
+            tokenHelper.setToken(headers, refreshedToken);
+
             UserTokenState userTokenState = new UserTokenState(
                     refreshedToken,
                     jwtProperties.getExpiration());
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, authCookie.toString())
+                    .headers(headers)
                     .body(userTokenState);
         } else {
             UserTokenState userTokenState = new UserTokenState();

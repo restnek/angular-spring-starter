@@ -68,7 +68,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private Authentication getAuthenticationFromToken(String authToken) {
         try {
-            String username = tokenHelper.getUsernameFromToken(authToken);
+            String username = tokenHelper.getUsername(authToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             return new TokenBasedAuthentication(userDetails, authToken);
         } catch (Exception e) {

@@ -2,9 +2,10 @@ package com.bfwg.config;
 
 import com.bfwg.security.TokenHelper;
 import com.bfwg.security.auth.TokenAuthenticationFilter;
+import com.bfwg.security.handler.AuthenticationEntryPointImpl;
+import com.bfwg.security.handler.AuthenticationFailureHandlerImpl;
 import com.bfwg.security.handler.AuthenticationSuccessHandler;
-import com.bfwg.security.handler.RestAuthenticationEntryPoint;
-import com.bfwg.security.handler.RestAuthenticationFailureHandler;
+import com.bfwg.security.handler.LogoutSuccessHandlerImpl;
 import com.bfwg.service.impl.UserDetailsLoaderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -46,10 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         AuthenticationSuccessHandler authenticationSuccessHandler =
                 new AuthenticationSuccessHandler(tokenHelper, objectMapper, jwtProperties);
-        RestAuthenticationFailureHandler authenticationFailureHandler =
-                new RestAuthenticationFailureHandler(objectMapper);
-        RestAuthenticationEntryPoint restAuthenticationEntryPoint =
-                new RestAuthenticationEntryPoint(objectMapper);
+        AuthenticationFailureHandler authenticationFailureHandler =
+                new AuthenticationFailureHandlerImpl(objectMapper);
+        AuthenticationEntryPoint authenticationEntryPoint =
+                new AuthenticationEntryPointImpl(objectMapper);
+        LogoutSuccessHandler logoutSuccessHandler = new LogoutSuccessHandlerImpl();
 
         // @formatter:off
         http
@@ -61,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
-                        .authenticationEntryPoint(restAuthenticationEntryPoint)
+                        .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .authorizeRequests()
                         .anyRequest()
@@ -75,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                         .logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout"))
                         .deleteCookies(jwtProperties.getCookie())
+                        .logoutSuccessHandler(logoutSuccessHandler)
                 .and()
                 .addFilterBefore(
                         new TokenAuthenticationFilter(tokenHelper, jwtUserDetailsService),

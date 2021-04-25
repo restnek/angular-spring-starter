@@ -1,0 +1,26 @@
+<ng-container *transloco="let t; read 'header'">
+  <button mat-button [matMenuTriggerFor]="menu">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #menu>
+    <button mat-menu-item [matMenuTriggerFor]="languages">
+      <mat-icon>language</mat-icon>
+      {{ t('language') }}
+    </button>
+    <mat-menu #languages="matMenu">
+      <button mat-menu-item (click)="changeLanguage('en')">English</button>
+      <button mat-menu-item (click)="changeLanguage('ru')">Русский</button>
+    </mat-menu>
+
+    <ng-container *ngIf="sessionService.isSignedIn()">
+      <button mat-menu-item routerLink="/change-password">
+        <mat-icon>settings</mat-icon>
+        {{ t('changePassword') }}
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        {{ t('logout') }}
+      </button>
+    </ng-container>
+  </mat-menu>
+</ng-container>

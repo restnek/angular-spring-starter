@@ -1,0 +1,54 @@
+:host {
+  max-width: 350px;
+
+  mat-card {
+    text-align: left;
+
+    .mat-card-avatar {
+      color: #a94442;
+
+      &.available {
+        color: #8BC34A;
+      }
+    }
+
+    .response {
+      border-radius: 5px;
+      padding: 5px;
+
+      &.response-success {
+        background-color: #dff0d8;
+        border: 1px solid #d6e9c6;
+        color: #3c763d;
+      }
+
+      &.response-error {
+        background-color: #f2dede;
+        border: 1px solid #ebccd1;
+        color: #a94442;
+      }
+    }
+
+    mat-spinner {
+      margin: 0 auto;
+    }
+
+    pre {
+      display: block;
+      padding: 5px 10px;
+      margin: 5px;
+      font-size: 13px;
+      color: #333;
+      word-break: break-all;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  }
+
+  @media screen and (max-width: 599px) {
+    max-width: 100%;
+  }
+}

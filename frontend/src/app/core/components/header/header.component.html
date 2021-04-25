@@ -1,0 +1,20 @@
+<ng-container *transloco="let t; read 'header'">
+  <mat-toolbar color="primary">
+    <button mat-button mat-ripple routerLink="/">
+      <mat-icon>home</mat-icon>
+      Angular-Spring-Starter
+    </button>
+
+    <div fxFlex fxHide.lt-sm fxLayoutAlign="end none">
+      <ng-container *ngIf="!sessionService.isSignedIn()">
+        <button routerLink="/login" mat-button mat-ripple>
+          {{ t('login') }}
+        </button>
+        <button routerLink="/signup" mat-button mat-ripple>
+          {{ t('signUp') }}
+        </button>
+      </ng-container>
+      <app-account-menu></app-account-menu>
+    </div>
+  </mat-toolbar>
+</ng-container>

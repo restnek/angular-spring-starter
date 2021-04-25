@@ -7,13 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.bfwg.config.JwtProperties;
 import com.bfwg.model.persistence.User;
-import com.bfwg.model.response.UserTokenState;
 import com.bfwg.security.TokenHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
@@ -33,11 +30,9 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
 
         User user = (User) authentication.getPrincipal();
         String token = tokenHelper.generateToken(user.getUsername());
-        ResponseCookie cookie = tokenHelper.generateCookieWithToken(token);
-        UserTokenState userTokenState = new UserTokenState(token, jwtProperties.getExpiration());
 
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        tokenHelper.setToken(response, token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(userTokenState));
+        response.getWriter().write(objectMapper.writeValueAsString(user));
     }
 }

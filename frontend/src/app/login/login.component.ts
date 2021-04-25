@@ -1,11 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DisplayMessage} from '../shared/models/display-message';
-import {AuthService, UserService} from '../service';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {CustomValidators} from '../shared/validation';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../core/services/api/auth.service';
+import { ErrorService } from '../core/services/util/error.service';
+import { passwordValidators, usernameValidators } from '../core/util/validation';
 
 @Component({
   selector: 'app-login',
@@ -14,97 +12,41 @@ import {CustomValidators} from '../shared/validation';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  returnUrl: string;
+  isBadCredentials = false;
   hidePassword = true;
 
-  /**
-   * Boolean used in telling the UI
-   * that the form has been submitted
-   * and is awaiting a response
-   */
-  // submitted = false;
-
-  /**
-   * Notification message from received
-   * form request or router
-   */
-  // notification: DisplayMessage;
-
-  // private ngUnsubscribe: Subject<void> = new Subject<void>();
-
   constructor(
-    // private userService: UserService,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public errorService: ErrorService
   ) {
     this.initLoginForm();
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
 
-  initLoginForm() {
+  initLoginForm(): void {
     this.loginForm = this.formBuilder.group({
-      username: ['', [CustomValidators.notBlank, Validators.minLength(4), Validators.maxLength(20)]],
-      password: ['', [CustomValidators.notBlank, Validators.maxLength(100)]],
+      username: ['', usernameValidators()],
+      password: ['', passwordValidators(6, 100)],
     });
   }
 
-  get controls() {
-    return this.loginForm.controls;
-  }
-
-  togglePasswordVisibility(event: MouseEvent) {
+  togglePasswordVisibility(event: MouseEvent): void {
     event.stopPropagation();
     this.hidePassword = !this.hidePassword;
   }
 
-  // ngOnInit() {
-  //   this.route.params
-  //     .pipe(takeUntil(this.ngUnsubscribe))
-  //     .subscribe((params: DisplayMessage) => {
-  //       this.notification = params;
-  //     });
-  // }
-
-  // ngOnDestroy() {
-  //   this.ngUnsubscribe.next();
-  //   this.ngUnsubscribe.complete();
-  // }
-
-  // onResetCredentials() {
-  //   this.userService.resetCredentials()
-  //     .pipe(takeUntil(this.ngUnsubscribe))
-  //     .subscribe(res => {
-  //       if (res.result === 'success') {
-  //         alert('Password has been reset to 123 for all accounts');
-  //       } else {
-  //         alert('Server error');
-  //       }
-  //     });
-  // }
-
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value)
         .subscribe(res => {
           console.log(res);
-          this.router.navigateByUrl(this.returnUrl);
+          this.router.navigate(['/']);
         }, err => {
-          console.log(err);
+          this.isBadCredentials = err.error.type === 'badCredentials';
+          this.errorService.renderServerErrors(this.loginForm, err);
         });
     }
-
-  //   this.notification = undefined;
-  //   this.submitted = true;
-  //
-  //   this.authService.login(this.form.value)
-  //     .subscribe(data => {
-  //       this.userService.getMyInfo().subscribe();
-  //       this.router.navigate([this.returnUrl]);
-  //     }, error => {
-  //       this.submitted = false;
-  //       this.notification = {msgType: 'error', msgBody: 'Incorrect username or password.'};
-  //     });
   }
 }

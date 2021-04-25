@@ -1,7 +1,7 @@
--- password: qwerty
+-- password: Qwerty1!
 INSERT INTO users (id, username, password, firstname, lastname)
-VALUES (1, 'user', '$2a$10$aeQntRxYoXqi6BNcuB4cgurGZ0kHs4hycXnadisEMoPTuw5sam6Zy', 'Oliver', 'Smith'),
-       (2, 'admin', '$2a$10$aeQntRxYoXqi6BNcuB4cgurGZ0kHs4hycXnadisEMoPTuw5sam6Zy', 'Olivia', 'Jones');
+VALUES (1, 'user', '$2y$10$2gTuNhXypMqQdomPnBXKx.lQpOx9NLESWcYXOc5UGNamyBYN7xNsy', 'Oliver', 'Smith'),
+       (2, 'admin', '$2y$10$2gTuNhXypMqQdomPnBXKx.lQpOx9NLESWcYXOc5UGNamyBYN7xNsy', 'Olivia', 'Jones');
 
 INSERT INTO authority (id, name)
 VALUES (1, 'ROLE_USER'),

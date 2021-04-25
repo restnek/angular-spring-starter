@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:appdb
+    url: jdbc:h2:mem:assdb
     schema: classpath:db/h2/schema.sql
     data: classpath:db/h2/data.sql
   jpa:
@@ -32,3 +32,4 @@ security:
     signature-algorithm: HS256
     header: Authorization
     cookie: AUTH-TOKEN
+    type: Bearer

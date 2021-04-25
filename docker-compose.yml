@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend/.
+    ports:
+      - 80:80
+    restart: always
+    depends_on:
+      - "api-server"
+    networks:
+      - angular-spring-starter
+  api-server:
+    build: ./server/.
+    ports:
+      - 8080:8080
+    restart: always
+    networks:
+      - angular-spring-starter
+
+networks:
+  angular-spring-starter:
+    driver: bridge

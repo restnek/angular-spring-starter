@@ -33,6 +33,12 @@
       "type": "java.lang.String",
       "description": "Name of the cookie that contains the JWT.",
       "defaultValue": "AUTH-TOKEN"
+    },
+    {
+      "name": "security.jwt.type",
+      "type": "java.lang.String",
+      "description": "Type of authentication token.",
+      "defaultValue": "Bearer"
     }
   ]
 }

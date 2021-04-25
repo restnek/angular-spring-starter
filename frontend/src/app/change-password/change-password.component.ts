@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {DisplayMessage} from '../shared/models/display-message';
-import {AuthService} from '../service';
-import {mergeMap} from 'rxjs/operators';
-import {CustomValidators} from '../shared/validation';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../core/services/api/auth.service';
+import { ErrorService } from '../core/services/util/error.service';
+import { passwordValidators } from '../core/util/validation';
 
 @Component({
   selector: 'app-change-password',
@@ -13,53 +12,43 @@ import {CustomValidators} from '../shared/validation';
 })
 export class ChangePasswordComponent {
   changePasswordForm: FormGroup;
-
-  /**
-   * Boolean used in telling the UI
-   * that the form has been submitted
-   * and is awaiting a response
-   */
-  // submitted = false;
-
-  /**
-   * Diagnostic message from received
-   * form request error
-   */
-  // notification: DisplayMessage;
+  hideOldPassword = true;
+  hideNewPassword = true;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public errorService: ErrorService
   ) {
-    this.changePasswordForm = formBuilder.group({
-      oldPassword: ['', [CustomValidators.notBlank, Validators.maxLength(100)]],
-      newPassword: ['', [CustomValidators.notBlank, Validators.maxLength(100)]],
+    this.initChangePasswordForm();
+  }
+
+  private initChangePasswordForm(): void {
+    this.changePasswordForm = this.formBuilder.group({
+      oldPassword: ['', passwordValidators(6, 100)],
+      newPassword: ['', passwordValidators(6, 100)]
     });
   }
 
-  get controls() {
-    return this.changePasswordForm.controls;
+  toggleOldPasswordVisibility(event: MouseEvent): void {
+    event.stopPropagation();
+    this.hideOldPassword = !this.hideOldPassword;
   }
 
-  onSubmit() {
+  toggleNewPasswordVisibility(event: MouseEvent): void {
+    event.stopPropagation();
+    this.hideNewPassword = !this.hideNewPassword;
+  }
+
+  onSubmit(): void {
     if (this.changePasswordForm.valid) {
-      console.log('sen change password request');
+      this.authService.changePassword(this.changePasswordForm.value)
+        .subscribe(() => {
+          this.router.navigate(['/']);
+        }, err => {
+          this.errorService.renderServerErrors(this.changePasswordForm, err);
+        });
     }
-
-    // /**
-    //  * Innocent until proven guilty
-    //  */
-    // this.notification = undefined;
-    // this.submitted = true;
-
-    // this.authService.changePassword(this.form.value)
-    //   .pipe(mergeMap(() => this.authService.logout()))
-    //   .subscribe(() => {
-    //     this.router.navigate(['/login', {msgType: 'success', msgBody: 'Success! Please sign in with your new password.'}]);
-    //   }, error => {
-    //     this.submitted = false;
-    //     this.notification = {msgType: 'error', msgBody: 'Invalid old password.'};
-    //   });
   }
 }

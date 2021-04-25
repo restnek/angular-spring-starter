@@ -49,7 +49,7 @@ public class AuthControllerTest {
     public void testFailSignUpIfDataInvalid() throws Exception {
         String invalidPayload = "{ \"username\": \"test_user\", \"password\": \"test\" }";
         String validationErrorMessage = "Validation failed";
-        String firstnameErrorMessage = "Firstname can't be blank";
+        String firstnameErrorMessage = "Firstname can't be empty";
         String passwordErrorMessage = "Password must contain at least one digit, special symbol, "
                 + "upper and lower character";
 

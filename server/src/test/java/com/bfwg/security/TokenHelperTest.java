@@ -17,7 +17,7 @@ public class TokenHelperTest {
     private TokenHelper tokenHelper;
     private UserDetailsService userDetailsService;
     private JwtProperties jwtProperties;
-    private Clock clock = Clock.systemDefaultZone();
+    private final Clock clock = Clock.systemDefaultZone();
 
     @BeforeEach
     public void init() {

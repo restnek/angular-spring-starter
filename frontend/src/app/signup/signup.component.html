@@ -1,28 +1,23 @@
-<mat-card>
+<mat-card *transloco="let t; read 'signUp'">
   <mat-card-title>
-    <h2>Sign Up</h2>
+    <h2>{{ t('title') }}</h2>
   </mat-card-title>
 
-  <mat-card-content>
+  <mat-card-content *transloco="let e; read 'common.error'">
     <form fxFlex fxLayout="column" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="standard">
-        <mat-label>Username</mat-label>
-        <input matInput formControlName="username" required>
-        <mat-error>
-          <ng-container *ngIf="controls.username.errors?.notblank; else usernameLength">
-            Username can't be blank
-          </ng-container>
-          <ng-template #usernameLength>
-            <ng-container *ngIf="controls.username.errors?.minlength || controls.username.errors?.maxlength">
-              Username must be between 4 and 20 characters long
-            </ng-container>
-          </ng-template>
+        <mat-label>{{ t('username') }}</mat-label>
+        <input matInput formControlName="username">
+        <mat-error *ngIf="errorService.hasErrors(signUpForm, 'username')">
+          <div *ngFor="let error of errorService.getFieldErrors(signUpForm, 'username')">
+            {{ e('username.' + error) }}
+          </div>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="standard">
-        <mat-label>Password</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+        <mat-label>{{ t('password') }}</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
         <button
           matSuffix
           mat-icon-button
@@ -30,51 +25,38 @@
           class="button-input-visibility"
           type="button"
         >
-          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        <mat-error>
-          <ng-container *ngIf="controls.password.errors?.notblank; else passwordMaxLength">
-            Password can't be blank
-          </ng-container>
-          <ng-template #passwordMaxLength>
-            <ng-container *ngIf="controls.password.errors?.maxlength">
-              Password must be less than 100 characters
-            </ng-container>
-          </ng-template>
+        <mat-error *ngIf="errorService.hasErrors(signUpForm, 'password')">
+          <div *ngFor="let error of errorService.getFieldErrors(signUpForm, 'password')">
+            {{ e('password.' + error) }}
+          </div>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="standard">
-        <mat-label>Firstname</mat-label>
-        <input matInput formControlName="firstname" required>
-        <mat-error>
-          <ng-container *ngIf="controls.firstname.errors?.notblank; else firstnameMaxLength">
-            Firstname can't be blank
-          </ng-container>
-          <ng-template #firstnameMaxLength>
-            <ng-container *ngIf="controls.firstname.errors?.maxlength">
-              Firstname must be less than 50 characters
-            </ng-container>
-          </ng-template>
+        <mat-label>{{ t('firstname') }}</mat-label>
+        <input matInput formControlName="firstname">
+        <mat-error *ngIf="errorService.hasErrors(signUpForm, 'firstname')">
+          <div *ngFor="let error of errorService.getFieldErrors(signUpForm, 'firstname')">
+            {{ e('firstname.' + error) }}
+          </div>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="standard">
-        <mat-label>Lastname</mat-label>
-        <input matInput formControlName="lastname" required>
-        <mat-error>
-          <ng-container *ngIf="controls.lastname.errors?.notblank; else lastnameMaxLength">
-            Lastname can't be blank
-          </ng-container>
-          <ng-template #lastnameMaxLength>
-            <ng-container *ngIf="controls.lastname.errors?.maxlength">
-              Lastname must be less than 50 characters
-            </ng-container>
-          </ng-template>
+        <mat-label>{{ t('lastname') }}</mat-label>
+        <input matInput formControlName="lastname">
+        <mat-error *ngIf="errorService.hasErrors(signUpForm, 'lastname')">
+          <div *ngFor="let error of errorService.getFieldErrors(signUpForm, 'lastname')">
+            {{ e('lastname.' + error) }}
+          </div>
         </mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="signUpForm.invalid">Sign Up</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="signUpForm.invalid">
+        {{ t('submit') }}
+      </button>
     </form>
   </mat-card-content>
 </mat-card>

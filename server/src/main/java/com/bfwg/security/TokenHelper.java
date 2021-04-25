@@ -5,12 +5,14 @@ import java.util.Date;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.bfwg.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,7 +47,7 @@ public class TokenHelper {
     }
 
     public String refreshToken(String token) {
-        Claims claims = getClaimsFromToken(token);
+        Claims claims = getClaims(token);
         if (claims == null) {
             return null;
         }
@@ -65,13 +67,13 @@ public class TokenHelper {
 
     public boolean canTokenBeRefreshed(String token) {
         try {
-            Claims claims = getClaimsFromToken(token);
+            Claims claims = getClaims(token);
             if (claims == null) {
                 return false;
             }
 
             Date expirationDate = claims.getExpiration();
-            String username = getUsernameFromToken(token);
+            String username = getUsername(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             return expirationDate.compareTo(getCurrentDate()) > 0;
@@ -100,18 +102,33 @@ public class TokenHelper {
 
     private String getAuthHeader(HttpServletRequest request) {
         String header = request.getHeader(jwtProperties.getHeader());
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
+        String prefix = jwtProperties.getType() + " ";
+        if (header != null && header.startsWith(prefix)) {
+            return header.substring(prefix.length());
         }
         return null;
     }
 
-    public String getUsernameFromToken(String token) {
-        Claims claims = getClaimsFromToken(token);
+    public void setToken(HttpHeaders headers, String token) {
+        headers.set(HttpHeaders.SET_COOKIE, generateCookie(token).toString());
+        headers.set(jwtProperties.getHeader(), generateTokenWithType(token));
+    }
+
+    public void setToken(HttpServletResponse response, String token) {
+        response.setHeader(HttpHeaders.SET_COOKIE, generateCookie(token).toString());
+        response.setHeader(jwtProperties.getHeader(), generateTokenWithType(token));
+    }
+
+    private String generateTokenWithType(String token) {
+        return jwtProperties.getType() + " " + token;
+    }
+
+    public String getUsername(String token) {
+        Claims claims = getClaims(token);
         return claims != null ? claims.getSubject() : null;
     }
 
-    private Claims getClaimsFromToken(String token) {
+    private Claims getClaims(String token) {
         try {
             return Jwts.parser()
                     .setSigningKey(jwtProperties.getSecret())
@@ -122,9 +139,10 @@ public class TokenHelper {
         }
     }
 
-    public ResponseCookie generateCookieWithToken(String token) {
+    private ResponseCookie generateCookie(String token) {
         return ResponseCookie.from(jwtProperties.getCookie(), token)
                 .httpOnly(true)
+                .sameSite("Strict")
                 .maxAge(jwtProperties.getExpiration())
                 .path("/")
                 .build();

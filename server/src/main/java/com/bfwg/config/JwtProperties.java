@@ -19,6 +19,7 @@ public class JwtProperties {
     private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
     private String header = "Authorization";
     private String cookie = "AUTH-TOKEN";
+    private String type = "Bearer";
 
     public int getExpirationInMilliseconds() {
         return 1000 * expiration;

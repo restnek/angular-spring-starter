@@ -1,0 +1,20 @@
+<mat-form-field appearance="standard">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    [disabled]="disabled"
+    [type]="type"
+    [(ngModel)]="value"
+    (change)="onChange(value)"
+  />
+  <button
+    *ngIf="secret"
+    matSuffix
+    mat-icon-button
+    (click)="changeVisibility($event)"
+    class="button-input-visibility"
+    type="button"
+  >
+  </button>
+  <ng-content></ng-content>
+</mat-form-field>

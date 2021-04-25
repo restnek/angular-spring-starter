@@ -1,28 +1,28 @@
-<mat-card>
+<mat-card *transloco="let t; read 'login'">
   <mat-card-title>
-    <h2>Login</h2>
+    <h2>{{ t('title') }}</h2>
   </mat-card-title>
 
-  <mat-card-content>
+  <mat-card-content *transloco="let e; read 'common.error'">
     <form fxFlex fxLayout="column" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="isBadCredentials" fxFlex fxLayoutAlign="start center" class="form-error">
+        <mat-icon>error</mat-icon>
+        <div>{{ t('badCredentials') }}</div>
+      </div>
+
       <mat-form-field appearance="standard">
-        <mat-label>Username</mat-label>
-        <input matInput formControlName="username" required>
-        <mat-error>
-          <ng-container *ngIf="controls.username.errors?.notblank; else usernameLength">
-            Username can't be blank
-          </ng-container>
-          <ng-template #usernameLength>
-            <ng-container *ngIf="controls.username.errors?.minlength || controls.username.errors?.maxlength">
-              Username must be between 4 and 20 characters long
-            </ng-container>
-          </ng-template>
+        <mat-label>{{ t('username') }}</mat-label>
+        <input matInput formControlName="username">
+        <mat-error *ngIf="errorService.hasErrors(loginForm, 'username')">
+          <div *ngFor="let error of errorService.getFieldErrors(loginForm, 'username')">
+            {{ e('username.' + error) }}
+          </div>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="standard">
-        <mat-label>Password</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+        <mat-label>{{ t('password') }}</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
         <button
           matSuffix
           mat-icon-button
@@ -30,21 +30,18 @@
           class="button-input-visibility"
           type="button"
         >
-          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error>
-          <ng-container *ngIf="controls.password.errors?.notblank; else passwordMaxLength">
-            Password can't be blank
-          </ng-container>
-          <ng-template #passwordMaxLength>
-            <ng-container *ngIf="controls.password.errors?.maxlength">
-              Password must be less than 100 characters
-            </ng-container>
-          </ng-template>
+        <mat-error *ngIf="errorService.hasErrors(loginForm, 'password')">
+          <div *ngFor="let error of errorService.getFieldErrors(loginForm, 'password')">
+            {{ e('password.' + error) }}
+          </div>
         </mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+        {{ t('submit') }}
+      </button>
     </form>
   </mat-card-content>
 </mat-card>

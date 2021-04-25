@@ -5,36 +5,41 @@
   fxLayoutAlign="center none"
   fxLayoutGap="50px"
   fxLayoutGap.lt-lg="15px"
+  *transloco="let t; read 'home'"
 >
   <app-api-card
     fxFlex
-    path="/api/foo"
-    content="This is an demo public endpoint which requires no authentication."
-    imgUrl="assets/image/foo.png"
-    subTitle="Public"
     title="&quot;Foo&quot;"
+    webpUrl="assets/image/foo.webp"
+    fallbackImgUrl="assets/image/foo.jpg"
+    [path]="fooUrl"
+    [subtitle]="t('fooApi.subtitle')"
+    [description]="t('fooApi.description')"
+    [available]="true"
   >
   </app-api-card>
 
   <app-api-card
     fxFlex
-    path="/api/auth/whoami"
-    content="The regular endpoint which returns the current user information. You have to sign in as either a User or an Admin to gain the access to this endpoint."
-    imgUrl="assets/image/user.png"
-    subTitle="Authorized role: USER"
     title="&quot;Who am I&quot;"
-    secure="true"
+    webpUrl="assets/image/user.webp"
+    fallbackImgUrl="assets/image/user.jpg"
+    [path]="whoAmIUrl"
+    [subtitle]="t('whoAmIApi.subtitle')"
+    [description]="t('whoAmIApi.description')"
+    [available]="sessionService.isSignedIn()"
   >
   </app-api-card>
 
   <app-api-card
     fxFlex
-    path="/api/users"
-    content="This endpoint will give you a list of all the users. You have to sign in as an Admin to gain the access to this endpoint."
-    imgUrl="assets/image/admin.png"
-    subTitle="Authorized role: ADMIN"
     title="&quot;All users&quot;"
-    secure="true"
+    webpUrl="assets/image/admin.webp"
+    fallbackImgUrl="assets/image/admin.jpg"
+    [path]="usersUrl"
+    [subtitle]="t('usersApi.subtitle')"
+    [description]="t('usersApi.description')"
+    [available]="sessionService.isSignedIn() && sessionService.isAdmin()"
   >
   </app-api-card>
 </div>
